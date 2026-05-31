@@ -1,0 +1,2358 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Guía Interactiva BD - Semana 1</title>
+  <meta name="theme-color" content="#4f46e5">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <script src="https://unpkg.com/react@17/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    select, option{color:#111827!important;background:#fff!important}.study-note{background:rgba(51,65,85,.9);border:1px solid rgba(129,140,248,.5);border-radius:1rem;padding:1rem}.code-explain{background:rgba(15,23,42,.9);border-radius:.75rem;padding:.75rem}.mini-title{color:#c7d2fe;font-weight:800;margin-top:1rem;margin-bottom:.5rem}.audio-panel{position:relative;z-index:50;background:rgba(49,46,129,.95);border:1px solid rgba(129,140,248,.35);border-radius:1.5rem;padding:1rem;box-shadow:0 20px 45px rgba(0,0,0,.35);width:100%;max-width:330px}.audio-sidebar{position:sticky;top:1rem;min-height:calc(100vh - 2rem);display:flex;justify-content:center;align-items:flex-end}.main-layout{display:grid;grid-template-columns:minmax(0,1fr) 350px;gap:1.5rem;align-items:start}@media(max-width:1024px){.main-layout{display:block}.audio-sidebar{position:static;min-height:auto;margin-top:1.5rem;align-items:flex-start}.audio-panel{max-width:none;width:100%}}.audio-panel select{width:100%;border-radius:9999px;padding:.65rem .9rem;margin-bottom:.5rem;font-size:.9rem}.audio-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.5rem}.audio-btn{border-radius:9999px;padding:.75rem .9rem;font-weight:800;font-size:.85rem;background:#6366f1;color:white;box-shadow:0 10px 20px rgba(0,0,0,.18);transition:transform .12s ease,background .12s ease}.audio-btn:hover{background:#818cf8;transform:translateY(-1px)}.audio-stop{grid-column:1/-1;background:#dc2626!important}.audio-stop:hover{background:#ef4444!important}.audio-toggle-on{background:#059669!important}.audio-toggle-on:hover{background:#10b981!important}.audio-toggle-off{background:#475569!important}.audio-toggle-off:hover{background:#64748b!important}.audio-speed{margin:.55rem 0 .75rem}.speed-header{display:flex;align-items:center;justify-content:space-between;color:#fff;font-size:.9rem;font-weight:800;margin-bottom:.35rem}.speed-header span:last-child{font-size:.78rem;color:#e0e7ff;background:rgba(15,23,42,.35);padding:.15rem .45rem;border-radius:999px}.speed-range{width:100%;accent-color:#0ea5e9;cursor:pointer}.pill{display:inline-block;padding:.25rem .7rem;border-radius:999px;background:#3730a3;color:#e0e7ff;font-size:.78rem;font-weight:800}.svgbox{background:#0f172a;border:1px solid #475569;border-radius:1rem;padding:.75rem;overflow:auto}.choice:hover{transform:translateY(-1px)}
+  
+.video-wrapper{position:relative;width:100%;padding-bottom:56.25%;margin-top:15px}
+.video-wrapper iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:none;border-radius:16px}
+
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const DATA={
+ objectives:["Diferenciar dato e información según el contexto.","Reconocer el enfoque tradicional de archivos y el enfoque de base de datos.","Comprender el ciclo de vida de una base de datos.","Aplicar abstracción de datos para identificar lo importante de una realidad.","Distinguir modelos externo, conceptual e interno.","Reconocer entidades, atributos, relaciones y cardinalidades en un Modelo Entidad-Relación."],
+ ideas:[["Dato","Descripción de un hecho, persona, objeto o evento. Por sí solo puede no permitir tomar una decisión."],["Información","Dato organizado o interpretado para apoyar una decisión."],["Base de datos","Conjunto de datos relacionados, almacenados de forma permanente y usados por varios usuarios."],["Abstracción","Proceso de reconocer las características importantes de una situación u objeto y dejar fuera lo irrelevante."],["Modelo de datos","Representación abstracta de datos, entidades y asociaciones de una realidad."],["Modelo Entidad-Relación","Modelo conceptual que representa entidades, atributos y relaciones de un negocio."],["Reglas del negocio","Políticas, restricciones y operaciones que definen cómo funciona una organización."],["Cardinalidad","Indica cuántas ocurrencias de una entidad se relacionan con ocurrencias de otra entidad."]],
+ tabs:{contenido:[["intro","📌 Inicio"],["dato","📊 Dato/Información"],["enfoques","🗄️ Enfoques BD"],["ciclo","🔄 Ciclo de vida"],["modelos","🧠 Modelos"],["reglas","📋 Reglas negocio"],["mer","🧩 MER"]],estudio:[["summary","📚 Resúmenes"],["flashcards","🃏 Flashcards"],["practice","📝 Repaso"],["reflect","🤔 Reflexiona"],["gloss","📖 Glosario"]],practica:[["quiz","❓ Quiz"],["exam","📋 Examen"],["games","🎮 Juegos"]],progreso:[["stats","🏆 Progreso"],["badges","🏅 Logros"]]},
+ summaries:[["Dato e información",["Un dato describe un hecho, evento, persona u objeto.","La información aparece cuando los datos se organizan e interpretan para tomar decisiones.","Un mismo valor puede ser información en un contexto y dato en otro."]],["Enfoques de bases de datos",["El enfoque tradicional guarda datos en archivos separados por aplicación.","El enfoque de base de datos integra y comparte los datos para reducir redundancia.","El SGBD controla el acceso, ingreso, modificación, eliminación y recuperación de datos."]],["Ciclo de vida",["Diseño conceptual: identifica entidades, atributos y relaciones.","Selección del DBMS: se elige el software gestor.","Diseño lógico: transforma el modelo conceptual en tablas, vistas y estructuras lógicas.","Diseño físico: define almacenamiento y rutas de acceso para buen desempeño."]],["Abstracción y modelos",["Abstraer es quedarse con lo esencial para el problema.","El modelo externo refleja la vista de usuarios.","El modelo conceptual consolida las distintas visiones y valida datos y asociaciones.","El modelo interno se relaciona con almacenamiento físico y tecnología."]],["MER",["El Modelo Entidad-Relación usa entidades, atributos y relaciones.","Las entidades suelen ser sustantivos importantes del negocio.","Los atributos describen propiedades de entidades o relaciones.","Las relaciones conectan entidades y se leen en ambos sentidos."],["Las cardinalidades principales son 1:1, 1:M y M:M."]]],
+ flashcards:[["Dato/Info","¿Qué es un dato?","Una descripción de un hecho, persona, objeto o evento."],["Dato/Info","¿Qué es información?","Datos organizados o preparados para apoyar una decisión."],["Dato/Info","¿Un dato puede pasar a ser información?","Sí. Depende del contexto y del uso que se le dé."],["BD","¿Qué problema tiene el enfoque de archivos?","Puede generar redundancia, datos descentralizados y actualización lenta."],["BD","¿Qué es integración?","Organizar lógicamente los datos para reducir redundancia y facilitar acceso."],["BD","¿Qué es compartición?","Usuarios calificados acceden a los mismos datos para distintas actividades."],["Ciclo","¿Qué produce el diseño conceptual?","Un esquema conceptual con entidades, atributos y relaciones."],["Modelos","¿Qué es abstracción de datos?","Representar las características esenciales de una estructura de datos."],["MER","¿Qué es una entidad?","Objeto real o abstracto del que se necesita guardar información."],["MER","¿Qué es un atributo?","Propiedad o valor asociado a una entidad o relación."],["MER","¿Qué es una relación?","Conexión entre objetos de una o más entidades."],["Cardinalidad","¿Qué significa M:M?","Muchas ocurrencias en ambos sentidos."],["Cardinalidad","¿Qué significa 1:M?","Una ocurrencia de una entidad se relaciona con muchas de otra."],["Reglas","¿Qué son reglas del negocio?","Políticas, normas, restricciones y operaciones de la organización."]],
+ practice:[["Dato/Información","Explica por qué una nota final puede ser información en un caso y dato en otro.","Puede ser información si permite saber si un alumno aprobó. Pero puede ser dato si luego se usa junto a otras notas finales para calcular el promedio del curso."],["Enfoques","¿Por qué una base de datos reduce inconsistencias?","Porque integra los datos en una estructura lógica y evita que varias copias se actualicen de forma distinta."],["Abstracción","Usa el ejemplo persona: ¿qué miraría un médico y qué miraría un empleador?","El médico miraría altura, peso, edad, grupo sanguíneo y enfermedades. El empleador miraría edad, estudios, experiencia, salud y trabajo."],["Entidades","¿Cómo identificas entidades en una narrativa?","Buscando sustantivos importantes, verificando si se debe guardar información de ellos y si cada instancia es identificable."],["Atributos","Da un ejemplo de atributo simple y compuesto.","Simple: edad. Compuesto: dirección, porque puede dividirse en calle, número, comuna y ciudad."],["Relaciones","Explica CLIENTE compra PRODUCTO.","CLIENTE y PRODUCTO son entidades; compra es la relación que las conecta."],["Cardinalidad","Da un ejemplo de relación 1:M.","Un departamento puede tener muchos empleados; un empleado trabaja en un departamento."],["Cardinalidad","Da un ejemplo de relación M:M.","Un profesor imparte varias asignaturas y una asignatura puede ser impartida por varios profesores."]],
+ reflect:[["¿Por qué antes de crear tablas conviene hacer un modelo conceptual?","Porque permite entender la realidad del negocio sin amarrarse todavía a la tecnología o al almacenamiento físico."],["¿Por qué las reglas del negocio son importantes para el MER?","Porque indican restricciones y condiciones que luego se reflejan en entidades, relaciones y cardinalidades."],["¿Por qué no todo sustantivo de una narrativa debe ser entidad?","Porque solo debería ser entidad si es importante para el negocio, si se necesita guardar información y si cada ocurrencia puede identificarse."],["¿Qué error puede ocurrir si no se revisan las redundancias del modelo?","Se pueden guardar los mismos datos en varios lugares, generando inconsistencias y problemas de actualización."],["¿Qué significa leer una relación en ambos sentidos?","Significa verificar cómo se relaciona la entidad A con B y también B con A, para definir bien la cardinalidad."]],
+ glossary:[["Dato","Descripción de un hecho, evento, persona u objeto."],["Información","Datos organizados e interpretados para apoyar decisiones."],["Base de datos","Conjunto de datos relacionados y almacenados de forma permanente."],["SGBD / DBMS","Software que administra acceso, ingreso, modificación, eliminación y recuperación de datos."],["Redundancia","Repetición innecesaria de datos."],["Integración","Organización lógica de datos para reducir redundancia."],["Compartición","Acceso de usuarios calificados a los mismos datos."],["Diseño conceptual","Etapa que define entidades, atributos, relaciones y el modelo E/R."],["Diseño lógico","Etapa que transforma el modelo conceptual en estructura lógica de base de datos."],["Diseño físico","Etapa que define almacenamiento y rutas de acceso."],["Abstracción","Separar lo esencial de lo irrelevante."],["Modelo externo","Vista de usuario sobre la realidad que se representa."],["Modelo conceptual","Consolidación de visiones y datos relevantes del negocio."],["Modelo interno","Representación ligada a almacenamiento físico y tecnología."],["Regla del negocio","Política, norma, operación o restricción de una organización."],["Entidad","Objeto real o abstracto del que se desea almacenar información."],["Atributo","Propiedad que caracteriza una entidad o relación."],["Dominio","Conjunto de valores posibles para un atributo."],["Atributo simple","Atributo que no se divide en partes con significado propio."],["Atributo compuesto","Atributo formado por componentes con significado propio."],["Atributo multivalorado","Atributo que puede tener varios valores para una ocurrencia."],["Atributo derivado","Atributo calculado desde otros atributos."],["Relación","Conexión entre entidades."],["Cardinalidad","Cantidad de ocurrencias que pueden participar en una relación."],["1:1","Una ocurrencia se relaciona con una ocurrencia."],["1:M","Una ocurrencia se relaciona con muchas."],["M:M","Muchas ocurrencias se relacionan con muchas."]],
+ quiz:[
+ {q:"¿Qué es un dato?",opts:["Descripción de un hecho o entidad","Un modelo físico","Una tabla final"],a:0,tema:"Dato",exp:"Un dato describe un hecho, persona, objeto o evento."},
+ {q:"¿Cuándo los datos se convierten en información?",opts:["Cuando se organizan para tomar decisiones","Cuando se duplican","Cuando se borran"],a:0,tema:"Información",exp:"La información son datos organizados o preparados para apoyar decisiones."},
+ {q:"¿Qué caracteriza al enfoque tradicional de archivos?",opts:["Datos redundantes y descentralizados","Datos siempre integrados","Sin archivos"],a:0,tema:"BD",exp:"En archivos tradicionales los datos quedan separados por aplicación."},
+ {q:"¿Qué es una base de datos?",opts:["Conjunto de datos relacionados y permanentes","Un único dato aislado","Solo una imagen"],a:0,tema:"BD",exp:"La base de datos almacena datos relacionados para varios usos."},
+ {q:"¿Qué significa integración en base de datos?",opts:["Organizar archivos para reducir redundancia","Duplicar datos","Separar cada aplicación"],a:0,tema:"BD",exp:"Integración reduce redundancia y facilita acceso."},
+ {q:"¿Qué controla el SGBD?",opts:["Acceso, ingreso, modificación y recuperación de datos","Solo colores del diagrama","Solo documentos Word"],a:0,tema:"SGBD",exp:"El SGBD administra operaciones sobre los datos."},
+ {q:"¿Cuál etapa identifica entidades, atributos y relaciones?",opts:["Diseño conceptual","Diseño físico","Compra de hardware"],a:0,tema:"Ciclo",exp:"El diseño conceptual crea el esquema conceptual y el modelo E/R."},
+ {q:"¿Qué busca la abstracción de datos?",opts:["Reconocer características importantes","Agregar detalles irrelevantes","Eliminar toda información"],a:0,tema:"Abstracción",exp:"Abstraer es centrarse en lo esencial."},
+ {q:"¿Qué modelo representa lo que ve el usuario?",opts:["Modelo externo","Modelo interno","Modelo físico"],a:0,tema:"Modelos",exp:"El modelo externo corresponde a las vistas de usuario."},
+ {q:"¿Qué son reglas del negocio?",opts:["Políticas, normas y restricciones de la organización","Solo dibujos","Comandos SQL"],a:0,tema:"Reglas",exp:"Definen cómo funciona el negocio."},
+ {q:"¿Qué elementos principales tiene el MER?",opts:["Entidades, atributos y relaciones","Colores, fotos y títulos","Audios, botones y menús"],a:0,tema:"MER",exp:"El MER se basa en entidades, atributos y relaciones."},
+ {q:"¿Qué es una entidad?",opts:["Objeto real o abstracto del que se guarda información","Solo un número","Una línea decorativa"],a:0,tema:"Entidad",exp:"Entidad es algo importante para el negocio."},
+ {q:"¿Cómo se suelen nombrar las entidades?",opts:["En singular y mayúscula","En plural siempre","Sin nombre"],a:0,tema:"Entidad",exp:"En CASE*METHOD se usan nombres únicos, en mayúscula y singular."},
+ {q:"¿Qué es un atributo?",opts:["Propiedad descriptiva de una entidad o relación","Una entidad obligatoria","Una cardinalidad"],a:0,tema:"Atributo",exp:"Un atributo describe o identifica."},
+ {q:"Dirección con calle, número y comuna es atributo...",opts:["Compuesto","Simple","Derivado siempre"],a:0,tema:"Atributo",exp:"Es compuesto porque se divide en partes con significado."},
+ {q:"Varios teléfonos para un cliente es atributo...",opts:["Multivalorado","Simple obligatorio","1:1"],a:0,tema:"Atributo",exp:"Puede tener varios valores para una misma ocurrencia."},
+ {q:"¿Qué es una relación?",opts:["Conexión entre entidades","Un solo atributo","Un respaldo"],a:0,tema:"Relación",exp:"La relación conecta entidades."},
+ {q:"¿Qué indica la cardinalidad?",opts:["Cuántas ocurrencias participan en una relación","El color de la entidad","El nombre del software"],a:0,tema:"Cardinalidad",exp:"Cardinalidad indica cantidad de ocurrencias relacionadas."},
+ {q:"Una relación M:M significa...",opts:["Muchos en ambos sentidos","Uno a uno","Ninguna relación"],a:0,tema:"Cardinalidad",exp:"M:M tiene muchos en ambas direcciones."},
+ {q:"Profesor imparte asignatura, y ambos pueden ser varios, es...",opts:["M:M","1:1","Atributo simple"],a:0,tema:"Cardinalidad",exp:"Varios profesores pueden impartir varias asignaturas."}
+ ],
+ games:{kind:{title:"🧩 Clasifica el concepto",options:["Dato","Información","Entidad","Atributo","Relación"],items:[["Rut 12.345.678-9","Dato","Es un valor aislado que describe a una persona."],["Promedio final del curso","Información","Permite interpretar rendimiento del curso."],["CLIENTE","Entidad","Es un concepto importante del negocio."],["nombre_cliente","Atributo","Describe o identifica al cliente."],["COMPRA","Relación","Conecta cliente con producto."],["PRODUCTO","Entidad","Objeto del que se desea guardar información."]]},card:{title:"📐 Cardinalidad",options:["1:1","1:M","M:M"],items:[["Un empleado tiene una ficha laboral y una ficha pertenece a un empleado.","1:1","Una ocurrencia se asocia con una ocurrencia."],["Un departamento tiene muchos empleados.","1:M","Un departamento puede relacionarse con muchos empleados."],["Un profesor imparte varias asignaturas y una asignatura puede tener varios profesores.","M:M","Hay muchos en ambos sentidos."],["Un cliente puede realizar muchas compras.","1:M","Un cliente se relaciona con muchas compras."],["Un estudiante cursa muchas asignaturas y una asignatura tiene muchos estudiantes.","M:M","Muchos estudiantes con muchas asignaturas."]]},attr:{title:"📝 Tipo de atributo",options:["Simple","Compuesto","Multivalorado","Derivado"],items:[["edad","Simple","No se divide en partes útiles."],["dirección: calle, número, comuna","Compuesto","Se puede dividir en componentes."],["teléfonos de un cliente","Multivalorado","Puede tener varios valores."],["promedio final calculado desde notas","Derivado","Se obtiene a partir de otros atributos."],["fecha de nacimiento","Simple","Un único valor asociado a la persona."]]}}
+ };
+function App(){
+ const [tab,setTab]=React.useState('intro'),[menuOpen,setMenuOpen]=React.useState('CONTENIDO'),[merSub,setMerSub]=React.useState('intro');
+ const [voiceList,setVoiceList]=React.useState([]),[selectedVoice,setSelectedVoice]=React.useState(''),[audioClick,setAudioClick]=React.useState(true),[audioRate,setAudioRate]=React.useState(1.02);const audioQueueRef=React.useRef([]),audioTimerRef=React.useRef(null);
+ const shuffle=a=>[...a].sort(()=>Math.random()-.5);const makeQuiz=(n=12)=>shuffle(DATA.quiz).slice(0,n).map(p=>{const o=shuffle(p.opts.map((texto,i)=>({texto,ok:i===p.a})));return {...p,opts:o.map(x=>x.texto),a:o.findIndex(x=>x.ok)}});
+ const [quiz,setQuiz]=React.useState(()=>makeQuiz()),[qIdx,setQIdx]=React.useState(0),[selected,setSelected]=React.useState(null),[answered,setAnswered]=React.useState(false),[score,setScore]=React.useState(0),[wrong,setWrong]=React.useState([]),[finished,setFinished]=React.useState(false);
+ const [exam,setExam]=React.useState(()=>makeQuiz(15)),[examIdx,setExamIdx]=React.useState(0),[examAnswers,setExamAnswers]=React.useState([]),[examConfirmed,setExamConfirmed]=React.useState(false),[examFinished,setExamFinished]=React.useState(false);
+ const [flashIdx,setFlashIdx]=React.useState(0),[flashFlip,setFlashFlip]=React.useState(false),[practiceOpen,setPracticeOpen]=React.useState({}),[reflectOpen,setReflectOpen]=React.useState({});
+ const [activeGame,setActiveGame]=React.useState('kind'),[gameIdx,setGameIdx]=React.useState(0),[gameFeedback,setGameFeedback]=React.useState(null),[gameScore,setGameScore]=React.useState(0);
+ const [stats,setStats]=React.useState(()=>{try{return JSON.parse(localStorage.getItem('bdSemana1Stats'))||{best:0,attempts:0,history:[],wrongAnswers:[],examHistory:[]}}catch(e){return{best:0,attempts:0,history:[],wrongAnswers:[],examHistory:[]}}});
+ React.useEffect(()=>{const cargar=()=>{const v=window.speechSynthesis?window.speechSynthesis.getVoices().filter(x=>x.lang&&x.lang.toLowerCase().startsWith('es')):[];setVoiceList(v);if(!selectedVoice&&v.length)setSelectedVoice((v.find(x=>x.name.toLowerCase().includes('helena'))||v[0]).name)};cargar();if(window.speechSynthesis)window.speechSynthesis.onvoiceschanged=cargar},[]);
+ React.useEffect(()=>{const h=e=>{if(!audioClick)return;const btn=e.target.closest&&e.target.closest('button');if(!btn||btn.dataset.noaudio==='true')return;const t=(btn.innerText||'').trim();if(t&&!['ON','OFF','▲','▼'].includes(t))setTimeout(()=>hablar(t),60)};document.addEventListener('click',h);return()=>document.removeEventListener('click',h)});
+ const limpiar=t=>String(t||'').replace(/[📌📊🗄️🔄🧠📋🧩🏷️📝🔗📚🃏🤔❓🎮🏆🏅🎙️🔊🔇🐢🐇⏹️✅❌🧪🔍💡]/gu,' ').replace(/[{}[\];]/g,' ').replace(/Unidad\s*I/gi,'Unidad uno').replace(/Semana\s*1/gi,'Semana uno').replace(/MER/g,'modelo entidad relación').replace(/SGBD/g,'sistema gestor de base de datos').replace(/DBMS/g,'sistema gestor de base de datos').replace(/1:M/g,'uno a muchos').replace(/M:M/g,'muchos a muchos').replace(/1:1/g,'uno a uno').replace(/\s+/g,' ').trim();
+ const cola=t=>limpiar(t).replace(/([.!?])\s+/g,'$1|').split('|').flatMap(x=>x.trim()?[x.trim(),'__PAUSA__']:[]);
+ const hablar=t=>{if(!('speechSynthesis'in window))return;window.speechSynthesis.cancel();if(audioTimerRef.current)clearTimeout(audioTimerRef.current);audioQueueRef.current=cola(t);const next=()=>{const s=audioQueueRef.current.shift();if(!s)return;if(s==='__PAUSA__'){audioTimerRef.current=setTimeout(next,500);return}const u=new SpeechSynthesisUtterance(s);u.lang='es-ES';u.rate=audioRate;u.pitch=1;const voz=voiceList.find(v=>v.name===selectedVoice);if(voz)u.voice=voz;u.onend=()=>audioTimerRef.current=setTimeout(next,260);window.speechSynthesis.speak(u)};next()};
+ const detener=()=>{if(audioTimerRef.current)clearTimeout(audioTimerRef.current);audioQueueRef.current=[];window.speechSynthesis&&window.speechSynthesis.cancel()};
+ const textSection=()=>{const p=document.querySelector('[data-section-active="true"]');if(p)hablar(p.innerText.replace(/\n+/g,'. '))};const leerSeleccion=()=>{const t=String(window.getSelection?window.getSelection():'').trim();if(t)hablar(t)};
+ const saveStats=n=>{setStats(n);localStorage.setItem('bdSemana1Stats',JSON.stringify(n))};
+ const confirm=()=>{if(selected===null||answered)return;const q=quiz[qIdx];setAnswered(true);if(selected===q.a)setScore(s=>s+1);else setWrong(w=>[...w,{tema:q.tema,pregunta:q.q,tuRespuesta:q.opts[selected],correcta:q.opts[q.a],exp:q.exp}])};
+ const nextQ=()=>{if(qIdx+1<quiz.length){setQIdx(i=>i+1);setSelected(null);setAnswered(false)}else{const final=score;const n={...stats,best:Math.max(stats.best||0,final),attempts:(stats.attempts||0)+1,history:[...(stats.history||[]),{score:final,total:quiz.length,date:new Date().toLocaleString()}].slice(-10),wrongAnswers:[...(stats.wrongAnswers||[]),...wrong].slice(-40)};saveStats(n);setFinished(true)}};
+ const resetQuiz=()=>{setQuiz(makeQuiz());setQIdx(0);setSelected(null);setAnswered(false);setScore(0);setWrong([]);setFinished(false)};
+ const examScore=()=>exam.filter((q,i)=>examAnswers[i]===q.a).length;const nota=(s,t)=>Math.max(1,Math.min(7,1+(s/t)*6)).toFixed(1).replace('.',',');
+ const nextExam=()=>{if(!examConfirmed)return;if(examIdx+1<exam.length){setExamIdx(i=>i+1);setExamConfirmed(false)}else{const s=examScore();saveStats({...stats,examHistory:[...(stats.examHistory||[]),{score:s,total:exam.length,grade:nota(s,exam.length),date:new Date().toLocaleString()}].slice(-10)});setExamFinished(true)}};
+ const resetExam=()=>{setExam(makeQuiz(15));setExamIdx(0);setExamAnswers([]);setExamConfirmed(false);setExamFinished(false)};
+ const game=DATA.games[activeGame],item=game.items[gameIdx%game.items.length];const answerGame=o=>{if(gameFeedback)return;const ok=o===item[1];if(ok)setGameScore(s=>s+1);setGameFeedback({ok,text:(ok?'Correcto. ':'Incorrecto. ')+item[2]})};
+ const Card=({children,className=''})=><div className={'bg-slate-800 rounded-2xl p-6 border border-slate-700 shadow-xl '+className}>{children}</div>;
+ const Button=({children,onClick,className='',disabled=false})=><button onClick={onClick} disabled={disabled} className={'px-4 py-2 rounded-xl font-bold transition '+(disabled?'bg-slate-600 opacity-60':'bg-indigo-500 hover:bg-indigo-400')+' '+className}>{children}</button>;
+ const Menu=()=> <div className="space-y-3 mb-6">{[['CONTENIDO','📚',DATA.tabs.contenido],['ESTUDIO','🧠',DATA.tabs.estudio],['PRÁCTICA','🎯',DATA.tabs.practica],['PROGRESO','🏆',DATA.tabs.progreso]].map(g=><div key={g[0]} className="bg-slate-800 bg-opacity-70 rounded-3xl border border-slate-500 overflow-hidden"><button data-noaudio="true" onClick={()=>setMenuOpen(menuOpen===g[0]?'':g[0])} className="w-full px-5 py-4 flex items-center justify-between font-black text-indigo-100 hover:bg-slate-700"><span>{g[1]} {g[0]}</span><span>{menuOpen===g[0]?'▲':'▼'}</span></button>{menuOpen===g[0]&&<div className="p-4 border-t border-slate-600"><div className="flex flex-wrap justify-center gap-2">{g[2].map(t=><button key={t[0]} onClick={()=>setTab(t[0])} className={`px-4 py-2 rounded-xl font-bold text-sm transition min-w-[170px] ${tab===t[0]?'bg-indigo-500 shadow-lg':'bg-slate-700 hover:bg-slate-600'}`}>{t[1]}</button>)}</div></div>}</div>)}</div>;
+ const ERExample=()=> <div className="svgbox"><svg viewBox="0 0 760 220" width="100%" height="220"><defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#f59e0b"/></marker></defs><rect x="40" y="40" width="180" height="95" rx="18" fill="#1e293b" stroke="#60a5fa" strokeWidth="3"/><text x="130" y="72" textAnchor="middle" fill="#bfdbfe" fontWeight="800">CLIENTE</text><text x="65" y="100" fill="#e2e8f0" fontSize="14"># rut_cliente</text><text x="65" y="122" fill="#e2e8f0" fontSize="14">nombre</text><rect x="300" y="70" width="160" height="65" rx="14" fill="#451a03" stroke="#f59e0b" strokeWidth="3"/><text x="380" y="109" textAnchor="middle" fill="#fde68a" fontWeight="800">COMPRA</text><rect x="540" y="40" width="180" height="95" rx="18" fill="#1e293b" stroke="#34d399" strokeWidth="3"/><text x="630" y="72" textAnchor="middle" fill="#a7f3d0" fontWeight="800">PRODUCTO</text><text x="565" y="100" fill="#e2e8f0" fontSize="14"># cod_producto</text><text x="565" y="122" fill="#e2e8f0" fontSize="14">nombre</text><line x1="220" y1="102" x2="300" y2="102" stroke="#f59e0b" strokeWidth="4" markerEnd="url(#arrow)"/><line x1="460" y1="102" x2="540" y2="102" stroke="#f59e0b" strokeWidth="4" markerEnd="url(#arrow)"/><text x="245" y="88" fill="#fbbf24" fontWeight="800">1</text><text x="280" y="88" fill="#fbbf24" fontWeight="800">M</text><text x="480" y="88" fill="#fbbf24" fontWeight="800">M</text><text x="520" y="88" fill="#fbbf24" fontWeight="800">1</text><text x="380" y="175" textAnchor="middle" fill="#c7d2fe" fontSize="15">Un cliente puede realizar muchas compras. Una compra contiene productos.</text></svg></div>;
+ const content={
+ intro:<div className="space-y-5">
+  <Card className="border-indigo-400 shadow-xl">
+    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-5">
+      <div>
+        <p className="text-indigo-300 font-bold mb-1">📌 Unidad I · Modelamiento de Bases de Datos</p>
+        <h2 className="text-4xl font-black mb-3">Construyendo Modelos Conceptuales</h2>
+        <p className="text-slate-300 leading-relaxed max-w-3xl">Antes de crear una base de datos es necesario comprender la realidad que se desea representar. El modelamiento permite identificar entidades, atributos y relaciones para transformar información del mundo real en una estructura organizada, clara y útil.</p>
+      </div>
+      <div data-audio-skip="true" className="bg-indigo-500 bg-opacity-20 border border-indigo-300 rounded-2xl p-5 text-center min-w-[220px]">
+        <div className="text-6xl mb-2">🗄️</div>
+        <div className="font-black text-xl">Base de Datos</div>
+        <div className="text-sm text-indigo-100">Información organizada y relacionada</div>
+      </div>
+    </div>
+  </Card>
+
+  <Card className="border-cyan-400">
+    <h3 className="text-2xl font-bold text-cyan-200 mb-3">🌎 ¿Dónde se utilizan las Bases de Datos?</h3>
+    <p className="text-slate-300 leading-relaxed">Las bases de datos forman parte de prácticamente todos los sistemas informáticos actuales. Su función es almacenar, organizar y permitir el acceso a grandes cantidades de información de manera rápida y segura.</p>
+    <p className="text-slate-300 leading-relaxed mt-3">Los siguientes ejemplos muestran organizaciones y sistemas que necesitan bases de datos para gestionar información diariamente.</p>
+  </Card>
+
+  <div className="grid md:grid-cols-3 gap-4">
+    {[
+      ['🏥 Hospital','Un hospital necesita almacenar información médica y administrativa.',['Pacientes','Médicos','Fichas clínicas','Horas médicas','Tratamientos']],
+      ['🏫 Universidad','Una universidad administra información académica de muchos estudiantes.',['Alumnos','Profesores','Asignaturas','Cursos','Notas','Matrículas']],
+      ['🛒 Tienda online','Las tiendas digitales registran información comercial constantemente.',['Clientes','Productos','Compras','Pagos','Stock','Despachos']],
+      ['🏦 Banco','Los bancos utilizan bases de datos para controlar operaciones financieras.',['Clientes','Cuentas','Tarjetas','Movimientos','Créditos']],
+      ['✈️ Aerolínea','Una aerolínea debe administrar vuelos y pasajeros en tiempo real.',['Pasajeros','Vuelos','Reservas','Asientos','Equipaje']],
+      ['🎮 Videojuego','Los videojuegos modernos almacenan información de los jugadores.',['Usuarios','Partidas','Personajes','Puntajes','Niveles']]
+    ].map((x,i)=><Card key={i}>
+      <h3 className="font-bold text-indigo-300 text-lg mb-3">{x[0]}</h3>
+      <p className="text-slate-300 text-sm leading-relaxed mb-3">{x[1]}</p>
+      <p className="text-indigo-200 text-xs font-bold mb-2">Información que puede almacenar:</p>
+      <ul className="text-slate-300 text-sm space-y-1">{x[2].map(item=><li key={item}>• {item}</li>)}</ul>
+    </Card>)}
+  </div>
+
+  <Card className="border-indigo-400 bg-indigo-900 bg-opacity-30">
+    <h3 className="text-xl font-bold text-indigo-200 mb-3">💡 ¿Qué tienen en común todos estos ejemplos?</h3>
+    <p className="text-slate-300 leading-relaxed">Todos manejan grandes cantidades de información que debe almacenarse, actualizarse y consultarse constantemente.</p>
+    <p className="text-slate-300 leading-relaxed mt-3">Antes de construir una base de datos es necesario identificar qué información existe, cómo se relaciona y cuáles son los datos más importantes. Para ello se utiliza el Modelamiento de Bases de Datos y el Modelo Entidad-Relación (MER).</p>
+  </Card>
+
+  <Card>
+    <h3 className="text-2xl font-bold text-indigo-300 mb-4">🎯 ¿Qué aprenderás en esta unidad?</h3>
+    <div className="grid md:grid-cols-5 gap-3 text-center">
+      {[
+        ['🏷️','Entidades','Elementos importantes del negocio.'],
+        ['📝','Atributos','Datos que describen una entidad.'],
+        ['🔗','Relaciones','Conexiones entre entidades.'],
+        ['📐','Cardinalidades','Cantidad de ocurrencias relacionadas.'],
+        ['📊','Modelo E/R','Diagrama conceptual de la base de datos.']
+      ].map((x,i)=><div key={i} className="bg-slate-900 border border-slate-600 rounded-2xl p-4"><div className="text-4xl mb-2">{x[0]}</div><b className="text-indigo-200">{x[1]}</b><p className="text-xs text-slate-400 mt-2">{x[2]}</p></div>)}
+    </div>
+  </Card>
+
+  <Card className="border-cyan-400">
+    <h3 className="text-2xl font-bold text-cyan-200 mb-3">🔍 Ejemplo visual: Universidad</h3>
+    <p className="text-slate-300 mb-4">Un modelo conceptual toma una situación real y la representa de manera simple. En este ejemplo, las entidades principales son ALUMNO, PROFESOR y ASIGNATURA.</p>
+    <div data-audio-skip="true" className="svgbox">
+      <svg viewBox="0 0 760 360" width="100%" height="360" role="img" aria-label="Ejemplo modelo entidad relación universidad">
+        <defs><marker id="flechaUni" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#38bdf8" /></marker></defs>
+        <text x="380" y="35" textAnchor="middle" fill="#e0f2fe" fontSize="28" fontWeight="900">UNIVERSIDAD</text>
+        <rect x="80" y="105" rx="18" ry="18" width="190" height="88" fill="#1e293b" stroke="#38bdf8" strokeWidth="3" />
+        <text x="175" y="142" textAnchor="middle" fill="#e0f2fe" fontSize="24">👨‍🎓</text>
+        <text x="175" y="172" textAnchor="middle" fill="#ffffff" fontSize="20" fontWeight="800">ALUMNO</text>
+        <rect x="490" y="105" rx="18" ry="18" width="190" height="88" fill="#1e293b" stroke="#a78bfa" strokeWidth="3" />
+        <text x="585" y="142" textAnchor="middle" fill="#ede9fe" fontSize="24">👨‍🏫</text>
+        <text x="585" y="172" textAnchor="middle" fill="#ffffff" fontSize="20" fontWeight="800">PROFESOR</text>
+        <rect x="285" y="245" rx="18" ry="18" width="190" height="88" fill="#1e293b" stroke="#34d399" strokeWidth="3" />
+        <text x="380" y="282" textAnchor="middle" fill="#d1fae5" fontSize="24">📚</text>
+        <text x="380" y="312" textAnchor="middle" fill="#ffffff" fontSize="20" fontWeight="800">ASIGNATURA</text>
+        <path d="M175 193 C210 235 260 260 285 285" stroke="#38bdf8" strokeWidth="4" fill="none" markerEnd="url(#flechaUni)" />
+        <text x="210" y="240" fill="#bae6fd" fontSize="16" fontWeight="800">cursa</text>
+        <path d="M585 193 C550 235 500 260 475 285" stroke="#a78bfa" strokeWidth="4" fill="none" markerEnd="url(#flechaUni)" />
+        <text x="520" y="240" fill="#ddd6fe" fontSize="16" fontWeight="800">imparte</text>
+      </svg>
+    </div>
+    <div className="grid md:grid-cols-3 gap-3 mt-4">
+      <div className="study-note"><b>ALUMNO</b><p className="text-sm text-slate-300">Entidad: se necesita guardar información de cada alumno.</p></div>
+      <div className="study-note"><b>ASIGNATURA</b><p className="text-sm text-slate-300">Entidad: representa los ramos o cursos disponibles.</p></div>
+      <div className="study-note"><b>PROFESOR</b><p className="text-sm text-slate-300">Entidad: persona que imparte una o más asignaturas.</p></div>
+    </div>
+  </Card>
+
+  <div className="grid md:grid-cols-3 gap-4">
+    <Card className="border-emerald-400"><h3 className="text-xl font-bold text-emerald-200 mb-3">👤 Entidad</h3><p className="text-slate-300 mb-3">Representa algo importante del mundo real.</p><div className="bg-slate-900 rounded-xl p-4 text-center font-black text-lg">CLIENTE</div></Card>
+    <Card className="border-amber-400"><h3 className="text-xl font-bold text-amber-200 mb-3">📝 Atributo</h3><p className="text-slate-300 mb-3">Describe una característica de una entidad.</p><div className="bg-slate-900 rounded-xl p-4 text-sm">Rut<br/>Nombre<br/>Teléfono</div></Card>
+    <Card className="border-blue-400"><h3 className="text-xl font-bold text-blue-200 mb-3">🔗 Relación</h3><p className="text-slate-300 mb-3">Une dos o más entidades.</p><div className="bg-slate-900 rounded-xl p-4 text-center font-bold">CLIENTE<br/><span className="text-blue-300">compra</span><br/>PRODUCTO</div></Card>
+  </div>
+
+  <Card className="border-emerald-400">
+    <h3 className="text-2xl font-bold text-emerald-200 mb-4">🏗️ Flujo completo</h3>
+    <div className="grid md:grid-cols-4 gap-3 text-center">
+      {[
+        ['🌎','Mundo real','La situación que se quiere representar.'],
+        ['📋','Reglas del negocio','Condiciones, restricciones y necesidades.'],
+        ['📊','Modelo conceptual','Entidades, atributos y relaciones.'],
+        ['🗄️','Base de datos','Estructura organizada para almacenar información.']
+      ].map((x,i)=><div key={i} className="bg-slate-900 rounded-2xl p-4 border border-slate-600"><div className="text-4xl mb-2">{x[0]}</div><b>{x[1]}</b><p className="text-xs text-slate-400 mt-2">{x[2]}</p>{i<3&&<p className="text-2xl text-emerald-300 mt-2">↓</p>}</div>)}
+    </div>
+  </Card>
+
+  <Card className="border-red-400">
+    <h3 className="text-2xl font-bold text-red-200 mb-4">⚡ Esto suele aparecer en la prueba</h3>
+    <div className="grid md:grid-cols-3 gap-3 text-slate-200">
+      {['Identificar entidades','Identificar atributos','Identificar relaciones','Cardinalidades 1:1, 1:M y M:M','Relaciones unarias','Relaciones binarias','Relaciones ternarias','Identificador único UID','Lectura de diagramas E/R'].map((x,i)=><div key={i} className="bg-red-900 bg-opacity-30 border border-red-500 rounded-xl p-3 font-bold">✅ {x}</div>)}
+    </div>
+  </Card>
+
+  <Card className="border-purple-400">
+    <h3 className="text-2xl font-bold text-purple-200 mb-4">📚 Caso práctico: Sistema de Biblioteca</h3>
+    <div className="grid md:grid-cols-2 gap-4">
+      <div className="bg-slate-900 rounded-2xl p-5 border border-slate-600">
+        <p className="font-black text-lg mb-3">📖 LIBRO</p><p className="text-slate-300 text-sm mb-4">Código · Título · Autor</p>
+        <p className="font-black text-lg mb-3">👤 SOCIO</p><p className="text-slate-300 text-sm">Rut · Nombre · Teléfono</p>
+        <div className="mt-5 text-center font-bold text-purple-200">SOCIO<br/>solicita<br/>LIBRO</div>
+      </div>
+      <div className="overflow-auto">
+        <table className="w-full text-sm border border-slate-600 rounded-xl overflow-hidden">
+          <thead><tr className="bg-purple-900"><th className="p-3 text-left">Elemento</th><th className="p-3 text-left">Tipo</th><th className="p-3 text-left">Por qué</th></tr></thead>
+          <tbody>
+            <tr className="border-t border-slate-600"><td className="p-3">Libro</td><td className="p-3">Entidad</td><td className="p-3">Se necesita guardar información de cada libro.</td></tr>
+            <tr className="border-t border-slate-600"><td className="p-3">Socio</td><td className="p-3">Entidad</td><td className="p-3">Representa a las personas registradas.</td></tr>
+            <tr className="border-t border-slate-600"><td className="p-3">Código</td><td className="p-3">Atributo</td><td className="p-3">Describe e identifica al libro.</td></tr>
+            <tr className="border-t border-slate-600"><td className="p-3">Nombre</td><td className="p-3">Atributo</td><td className="p-3">Describe al socio.</td></tr>
+            <tr className="border-t border-slate-600"><td className="p-3">Solicita</td><td className="p-3">Relación</td><td className="p-3">Conecta SOCIO con LIBRO.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </Card>
+</div>,
+ dato:<div className="space-y-5">
+
+  <Card className="border-cyan-400">
+    <p className="text-cyan-300 font-bold mb-1">📊 Semana 1 · Según el PDF</p>
+    <h2 className="text-3xl md:text-4xl font-black mb-3">Dato e Información</h2>
+    <p className="text-slate-300 leading-relaxed">
+      En esta parte del PDF se explica una idea central: un dato por sí solo puede tener poco significado, pero cuando se organiza e interpreta puede transformarse en información útil para tomar decisiones.
+    </p>
+  </Card>
+
+  <div className="grid md:grid-cols-2 gap-4">
+    <Card className="border-blue-400">
+      <h3 className="text-2xl font-bold text-blue-200 mb-3">📝 ¿Qué es un dato?</h3>
+      <p className="text-slate-300 leading-relaxed mb-4">
+        Es una descripción o imagen relacionada con un hecho, evento, persona, objeto u otra entidad del mundo real.
+      </p>
+      <div className="bg-slate-900 rounded-2xl p-4 border border-blue-500">
+        <p className="font-bold text-blue-300 mb-2">Ejemplos del PDF:</p>
+        <div className="grid grid-cols-2 gap-2 text-sm text-slate-300">
+          <span>• Juan Pérez</span>
+          <span>• Santiago</span>
+          <span>• Sano</span>
+          <span>• $650.000</span>
+          <span>• Lector</span>
+          <span>• Jperez</span>
+        </div>
+      </div>
+      <p className="text-blue-100 text-sm mt-4">
+        Su significado puede cambiar según el contexto.
+      </p>
+    </Card>
+
+    <Card className="border-emerald-400">
+      <h3 className="text-2xl font-bold text-emerald-200 mb-3">📊 ¿Qué es información?</h3>
+      <p className="text-slate-300 leading-relaxed mb-4">
+        Son datos organizados o preparados en una forma adecuada para apoyar la toma de decisiones.
+      </p>
+      <div className="bg-slate-900 rounded-2xl p-4 border border-emerald-500">
+        <p className="font-bold text-emerald-300 mb-2">Ejemplo del PDF:</p>
+        <p className="text-slate-300 text-sm">
+          Una lista de productos y stock sin orden son datos. Si se ordenan de menor a mayor stock, se convierten en información para el encargado de compras.
+        </p>
+      </div>
+      <p className="text-emerald-100 text-sm mt-4">
+        La información permite interpretar y decidir.
+      </p>
+    </Card>
+  </div>
+
+  <Card className="border-indigo-400">
+    <h3 className="text-2xl font-bold text-indigo-200 mb-4">🔄 Datos → Información → Conocimiento</h3>
+    <p className="text-slate-300 leading-relaxed mb-5">
+      La idea visual del PDF puede entenderse así: los datos se organizan para producir información, y esa información aumenta el conocimiento de quien la recibe.
+    </p>
+
+    <div className="grid md:grid-cols-3 gap-4 text-center">
+      <div className="bg-slate-900 rounded-2xl p-5 border border-blue-500">
+        <div className="text-5xl mb-3">📝</div>
+        <h4 className="text-xl font-black text-blue-300 mb-3">Datos</h4>
+        <div className="bg-blue-900 bg-opacity-30 rounded-xl p-4 border border-blue-500 font-bold">
+          23,42<br/>3,55<br/>100,00
+        </div>
+        <p className="text-slate-400 text-xs mt-3">Valores aislados.</p>
+      </div>
+
+      <div className="bg-slate-900 rounded-2xl p-5 border border-emerald-500">
+        <div className="text-5xl mb-3">📊</div>
+        <h4 className="text-xl font-black text-emerald-300 mb-3">Información</h4>
+        <div className="bg-emerald-900 bg-opacity-30 rounded-xl p-4 border border-emerald-500 font-bold text-sm">
+          Enero: 23,42<br/>Febrero: 3,55<br/>Marzo: 100,00
+        </div>
+        <p className="text-slate-400 text-xs mt-3">Datos con contexto.</p>
+      </div>
+
+      <div className="bg-slate-900 rounded-2xl p-5 border border-purple-500">
+        <div className="text-5xl mb-3">🧠</div>
+        <h4 className="text-xl font-black text-purple-300 mb-3">Conocimiento</h4>
+        <div className="bg-purple-900 bg-opacity-30 rounded-xl p-4 border border-purple-500 font-bold text-sm">
+          Las ventas aumentaron en marzo.
+        </div>
+        <p className="text-slate-400 text-xs mt-3">Interpretación útil.</p>
+      </div>
+    </div>
+  </Card>
+
+  
+  <Card className="border-indigo-400">
+    <h3 className="text-2xl font-bold text-indigo-200 mb-4">🎬 Video: La Alquimia de Datos</h3>
+    <p className="text-slate-300 leading-relaxed mb-4">
+      Observa cómo los datos se transforman en información y posteriormente en conocimiento útil para la toma de decisiones.
+    </p>
+
+    <div className="video-wrapper">
+      <iframe
+        src="https://www.youtube.com/embed/_vBeFdDag4A"
+        title="La Alquimia de Datos"
+        allowfullscreen>
+      </iframe>
+    </div>
+  </Card>
+
+
+<Card className="border-blue-400 bg-blue-900 bg-opacity-20">
+    <p className="text-blue-300 font-bold mb-1">📌 Caso 1 del PDF</p>
+    <h3 className="text-2xl font-bold text-blue-200 mb-4">Notas parciales → Nota final</h3>
+
+    <div className="grid md:grid-cols-2 gap-4">
+      <div className="bg-slate-900 rounded-2xl p-5 border border-blue-500">
+        <h4 className="font-bold text-blue-300 mb-3">Datos</h4>
+        <p className="text-slate-300 text-sm mb-4">
+          Las notas parciales son datos porque son valores que todavía deben procesarse.
+        </p>
+        <div className="grid grid-cols-3 gap-2 text-center">
+          <div className="bg-blue-900 bg-opacity-40 rounded-xl p-3 border border-blue-400"><b>Nota 1</b><br/>5,5</div>
+          <div className="bg-blue-900 bg-opacity-40 rounded-xl p-3 border border-blue-400"><b>Nota 2</b><br/>6,3</div>
+          <div className="bg-blue-900 bg-opacity-40 rounded-xl p-3 border border-blue-400"><b>Nota 3</b><br/>7,0</div>
+        </div>
+      </div>
+
+      <div className="bg-slate-900 rounded-2xl p-5 border border-emerald-500">
+        <h4 className="font-bold text-emerald-300 mb-3">Información</h4>
+        <p className="text-slate-300 text-sm mb-4">
+          La nota final permite saber el promedio del alumno y si aprobó la asignatura.
+        </p>
+        <div className="bg-emerald-900 bg-opacity-40 rounded-xl p-5 border border-emerald-400 text-center">
+          <p className="text-sm text-emerald-100">Resultado obtenido</p>
+          <p className="text-3xl font-black text-emerald-200">Nota Final: 6,3</p>
+          <p className="text-slate-300 mt-2">El alumno aprobó.</p>
+        </div>
+      </div>
+    </div>
+  </Card>
+
+  <Card className="border-purple-400 bg-purple-900 bg-opacity-20">
+    <p className="text-purple-300 font-bold mb-1">📌 Caso 2 del PDF</p>
+    <h3 className="text-2xl font-bold text-purple-200 mb-4">La misma nota final puede volver a ser dato</h3>
+
+    <p className="text-slate-300 leading-relaxed mb-4">
+      La nota final fue información para evaluar a un alumno. Pero si se junta con otras notas finales, ahora funciona como dato para calcular una nueva información: el promedio del curso.
+    </p>
+
+    <div className="grid md:grid-cols-2 gap-4">
+      <div className="bg-slate-900 rounded-2xl p-5 border border-purple-500">
+        <h4 className="font-bold text-purple-300 mb-3">Ahora son datos</h4>
+        <p className="text-slate-300"><b>Alumno 1:</b> 6,3</p>
+        <p className="text-slate-300"><b>Alumno 2:</b> 7,0</p>
+        <p className="text-slate-300"><b>Alumno 3:</b> 3,5</p>
+      </div>
+
+      <div className="bg-slate-900 rounded-2xl p-5 border border-emerald-500">
+        <h4 className="font-bold text-emerald-300 mb-3">Nueva información</h4>
+        <div className="bg-emerald-900 bg-opacity-40 rounded-xl p-5 border border-emerald-400 text-center">
+          <p className="text-sm text-emerald-100">Resultado obtenido</p>
+          <p className="text-3xl font-black text-emerald-200">Promedio del curso</p>
+          <p className="text-slate-300 mt-2">Permite analizar el rendimiento general.</p>
+        </div>
+      </div>
+    </div>
+  </Card>
+
+  <Card className="border-yellow-400">
+    <h3 className="text-2xl font-bold text-yellow-200 mb-4">⚠️ Lo que debes recordar para la prueba</h3>
+    <div className="grid md:grid-cols-2 gap-4">
+      <div className="bg-slate-900 rounded-2xl p-5 border border-yellow-500">
+        <h4 className="font-bold text-yellow-300 mb-2">📝 Dato</h4>
+        <p className="text-slate-300 text-sm">Describe un hecho, evento, persona, objeto o entidad del mundo real.</p>
+      </div>
+
+      <div className="bg-slate-900 rounded-2xl p-5 border border-yellow-500">
+        <h4 className="font-bold text-yellow-300 mb-2">📊 Información</h4>
+        <p className="text-slate-300 text-sm">Son datos organizados o preparados para apoyar la toma de decisiones.</p>
+      </div>
+
+      <div className="bg-slate-900 rounded-2xl p-5 border border-yellow-500">
+        <h4 className="font-bold text-yellow-300 mb-2">🧠 Conocimiento</h4>
+        <p className="text-slate-300 text-sm">Surge al interpretar la información y comprender una situación.</p>
+      </div>
+
+      <div className="bg-slate-900 rounded-2xl p-5 border border-yellow-500">
+        <h4 className="font-bold text-yellow-300 mb-2">🔁 Contexto</h4>
+        <p className="text-slate-300 text-sm">Un mismo valor puede ser dato o información según el uso que se le dé.</p>
+      </div>
+    </div>
+  </Card>
+
+  <Card className="border-red-400">
+    <h3 className="text-2xl font-bold text-red-200 mb-4">🚨 Pregunta típica de evaluación</h3>
+    <p className="text-slate-300 mb-4">Según el PDF, ¿cuándo los datos se transforman en información?</p>
+    <div className="space-y-3">
+      <div className="bg-slate-900 rounded-xl p-4 border border-slate-600">A) Cuando están sueltos y sin contexto.</div>
+      <div className="bg-emerald-900 bg-opacity-40 rounded-xl p-4 border border-emerald-500">B) Cuando se organizan o preparan para apoyar la toma de decisiones.</div>
+      <div className="bg-slate-900 rounded-xl p-4 border border-slate-600">C) Cuando se repiten varias veces.</div>
+    </div>
+    <p className="text-emerald-200 mt-4 font-bold">✅ Respuesta correcta: B.</p>
+  </Card>
+
+</div>,
+ enfoques:<div className="space-y-5">
+  <Card className="border-cyan-400">
+    <p className="text-cyan-300 font-bold mb-1">🗄️ Concepto base del PDF</p>
+    <h2 className="text-3xl md:text-4xl font-black mb-3">Enfoques de Bases de Datos</h2>
+    <p className="text-slate-300 leading-relaxed">Esta sección explica por qué las organizaciones pasaron desde el uso de archivos separados hacia el uso de bases de datos. La idea principal del PDF es comprender que los datos son un recurso que debe ser administrado, integrado, compartido y controlado de manera eficiente.</p>
+    <div className="bg-cyan-900 bg-opacity-30 border border-cyan-500 rounded-2xl p-5 mt-5">
+      <h3 className="font-bold text-cyan-200 mb-2">📌 Pregunta central</h3>
+      <p className="text-slate-300">¿Qué problema resuelve una base de datos frente al enfoque tradicional de archivos?</p>
+    </div>
+  </Card>
+
+  <Card>
+    <h3 className="text-2xl font-bold text-indigo-300 mb-4">🌎 Antes: cada aplicación guardaba sus propios archivos</h3>
+    <p className="text-slate-300 leading-relaxed mb-4">En el enfoque tradicional, los datos se almacenan en archivos individuales exclusivos para cada aplicación particular. Esto significa que cada sistema funciona con sus propios archivos y no necesariamente comparte los datos con los demás.</p>
+    <div data-audio-skip="true" className="svgbox">
+      <svg viewBox="0 0 820 300" width="100%" height="300" role="img" aria-label="Enfoque tradicional de archivos">
+        <defs><marker id="arrowFiles" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#fb7185" /></marker></defs>
+        <rect x="45" y="35" width="210" height="70" rx="18" fill="#1e293b" stroke="#fb7185" strokeWidth="3" />
+        <text x="150" y="78" textAnchor="middle" fill="#ffe4e6" fontWeight="900" fontSize="17">Sistema Matrículas</text>
+        <line x1="150" y1="105" x2="150" y2="155" stroke="#fb7185" strokeWidth="4" markerEnd="url(#arrowFiles)" />
+        <rect x="65" y="165" width="170" height="74" rx="14" fill="#450a0a" stroke="#fb7185" strokeWidth="3" />
+        <text x="150" y="198" textAnchor="middle" fill="#fecdd3" fontWeight="800">matriculas.dat</text>
+        <text x="150" y="220" textAnchor="middle" fill="#fecdd3" fontSize="13">Alumno repetido</text>
+
+        <rect x="305" y="35" width="210" height="70" rx="18" fill="#1e293b" stroke="#f59e0b" strokeWidth="3" />
+        <text x="410" y="78" textAnchor="middle" fill="#fef3c7" fontWeight="900" fontSize="17">Sistema Notas</text>
+        <line x1="410" y1="105" x2="410" y2="155" stroke="#f59e0b" strokeWidth="4" markerEnd="url(#arrowFiles)" />
+        <rect x="325" y="165" width="170" height="74" rx="14" fill="#451a03" stroke="#f59e0b" strokeWidth="3" />
+        <text x="410" y="198" textAnchor="middle" fill="#fde68a" fontWeight="800">notas.dat</text>
+        <text x="410" y="220" textAnchor="middle" fill="#fde68a" fontSize="13">Alumno repetido</text>
+
+        <rect x="565" y="35" width="210" height="70" rx="18" fill="#1e293b" stroke="#a78bfa" strokeWidth="3" />
+        <text x="670" y="78" textAnchor="middle" fill="#ede9fe" fontWeight="900" fontSize="17">Sistema Biblioteca</text>
+        <line x1="670" y1="105" x2="670" y2="155" stroke="#a78bfa" strokeWidth="4" markerEnd="url(#arrowFiles)" />
+        <rect x="585" y="165" width="170" height="74" rx="14" fill="#2e1065" stroke="#a78bfa" strokeWidth="3" />
+        <text x="670" y="198" textAnchor="middle" fill="#ddd6fe" fontWeight="800">biblioteca.dat</text>
+        <text x="670" y="220" textAnchor="middle" fill="#ddd6fe" fontSize="13">Alumno repetido</text>
+        <text x="410" y="278" textAnchor="middle" fill="#c7d2fe" fontSize="15">Cada aplicación administra sus datos por separado.</text>
+      </svg>
+    </div>
+  </Card>
+
+  <Card className="border-rose-400">
+    <h3 className="text-2xl font-bold text-rose-200 mb-4">📁 Enfoque tradicional de archivos</h3>
+    <p className="text-slate-300 leading-relaxed mb-4">Según el PDF, en este enfoque los datos se guardan en archivos individuales exclusivos para cada aplicación. El problema es que esta forma de trabajo puede generar repetición innecesaria de datos y hacer más lenta la actualización de los archivos.</p>
+    <div className="grid md:grid-cols-3 gap-4">
+      <div className="bg-rose-900 bg-opacity-30 rounded-2xl p-5 border border-rose-500">
+        <h4 className="font-bold text-rose-200 mb-2">❌ Datos redundantes</h4>
+        <p className="text-slate-300 text-sm">Los mismos datos pueden repetirse en distintos archivos.</p>
+      </div>
+      <div className="bg-rose-900 bg-opacity-30 rounded-2xl p-5 border border-rose-500">
+        <h4 className="font-bold text-rose-200 mb-2">❌ Datos descentralizados</h4>
+        <p className="text-slate-300 text-sm">La información queda repartida en varios archivos independientes.</p>
+      </div>
+      <div className="bg-rose-900 bg-opacity-30 rounded-2xl p-5 border border-rose-500">
+        <h4 className="font-bold text-rose-200 mb-2">❌ Actualización lenta</h4>
+        <p className="text-slate-300 text-sm">Si cambia un dato, hay que actualizarlo en varios lugares.</p>
+      </div>
+    </div>
+  </Card>
+
+  <Card className="border-red-400">
+    <h3 className="text-2xl font-bold text-red-200 mb-4">⚠️ Problema 1: Redundancia de datos</h3>
+    <p className="text-slate-300 leading-relaxed mb-4">La redundancia ocurre cuando un mismo dato se repite innecesariamente. En una universidad, el nombre de un alumno podría estar guardado en el archivo de matrículas, en el archivo de notas y en el archivo de biblioteca.</p>
+    <div className="grid md:grid-cols-3 gap-4">
+      {[
+        ['Matrículas','Rut: 12345678-9','Nombre: María González'],
+        ['Notas','Rut: 12345678-9','Nombre: María González'],
+        ['Biblioteca','Rut: 12345678-9','Nombre: María González']
+      ].map((x,i)=><div key={i} className="bg-slate-900 rounded-2xl p-5 border border-red-500">
+        <h4 className="font-bold text-red-300 mb-3">Archivo {x[0]}</h4>
+        <p className="text-slate-300 text-sm">{x[1]}</p>
+        <p className="text-slate-300 text-sm">{x[2]}</p>
+      </div>)}
+    </div>
+    <p className="text-red-200 mt-4 font-bold">Resultado: el mismo dato aparece repetido varias veces.</p>
+  </Card>
+
+  <Card className="border-yellow-400">
+    <h3 className="text-2xl font-bold text-yellow-200 mb-4">⚠️ Problema 2: Inconsistencia y actualización lenta</h3>
+    <p className="text-slate-300 leading-relaxed mb-4">Si María cambia su nombre o dirección, se deben modificar todos los archivos donde ese dato aparece. Si uno queda sin actualizar, se produce inconsistencia.</p>
+    <div className="grid md:grid-cols-2 gap-4">
+      <div className="bg-slate-900 rounded-2xl p-5 border border-yellow-500">
+        <h4 className="font-bold text-yellow-300 mb-3">Cambio correcto</h4>
+        <p className="text-slate-300">Matrículas → María Pérez</p>
+        <p className="text-slate-300">Notas → María Pérez</p>
+        <p className="text-slate-300">Biblioteca → María Pérez</p>
+      </div>
+      <div className="bg-red-900 bg-opacity-30 rounded-2xl p-5 border border-red-500">
+        <h4 className="font-bold text-red-300 mb-3">Error frecuente</h4>
+        <p className="text-slate-300">Matrículas → María Pérez</p>
+        <p className="text-slate-300">Notas → María Pérez</p>
+        <p className="text-slate-300">Biblioteca → María González</p>
+      </div>
+    </div>
+    <p className="text-yellow-100 mt-4">En el segundo caso, el sistema tiene información contradictoria sobre la misma persona.</p>
+  </Card>
+
+  <Card className="border-emerald-400">
+    <h3 className="text-2xl font-bold text-emerald-200 mb-4">🗄️ Enfoque de Base de Datos</h3>
+    <p className="text-slate-300 leading-relaxed">Para tratar el dato como un recurso, las organizaciones optan por trabajar con bases de datos. El PDF define una base de datos como un conjunto de datos relacionados y almacenados en forma permanente, usado con varios propósitos y por múltiples usuarios.</p>
+    <div className="bg-emerald-900 bg-opacity-30 border border-emerald-500 rounded-2xl p-5 mt-5">
+      <h4 className="font-bold text-emerald-200 mb-2">📌 Definición que debes memorizar</h4>
+      <p className="text-slate-200">Una base de datos es un conjunto de datos relacionados y almacenados en forma permanente, usado con varios propósitos y por múltiples usuarios.</p>
+    </div>
+  </Card>
+
+  <Card>
+    <h3 className="text-2xl font-bold text-indigo-300 mb-4">🔄 Cambio de enfoque</h3>
+    <p className="text-slate-300 leading-relaxed mb-4">La diferencia principal es que ahora los datos se organizan en una estructura común. En vez de que cada sistema tenga sus propios archivos aislados, varios usuarios y aplicaciones pueden trabajar con una base de datos compartida.</p>
+    <div data-audio-skip="true" className="svgbox">
+      <svg viewBox="0 0 820 330" width="100%" height="330" role="img" aria-label="Enfoque de base de datos">
+        <defs><marker id="arrowDB" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#34d399" /></marker></defs>
+        <rect x="285" y="35" width="250" height="95" rx="22" fill="#064e3b" stroke="#34d399" strokeWidth="4" />
+        <text x="410" y="78" textAnchor="middle" fill="#d1fae5" fontSize="22" fontWeight="900">BASE DE DATOS</text>
+        <text x="410" y="105" textAnchor="middle" fill="#a7f3d0" fontSize="14">Datos relacionados y permanentes</text>
+        <line x1="410" y1="130" x2="410" y2="185" stroke="#34d399" strokeWidth="4" markerEnd="url(#arrowDB)" />
+        <line x1="410" y1="185" x2="160" y2="230" stroke="#34d399" strokeWidth="4" markerEnd="url(#arrowDB)" />
+        <line x1="410" y1="185" x2="410" y2="230" stroke="#34d399" strokeWidth="4" markerEnd="url(#arrowDB)" />
+        <line x1="410" y1="185" x2="660" y2="230" stroke="#34d399" strokeWidth="4" markerEnd="url(#arrowDB)" />
+        <rect x="60" y="235" width="200" height="60" rx="16" fill="#1e293b" stroke="#60a5fa" strokeWidth="3" />
+        <text x="160" y="273" textAnchor="middle" fill="#bfdbfe" fontWeight="800">Matrículas</text>
+        <rect x="310" y="235" width="200" height="60" rx="16" fill="#1e293b" stroke="#f59e0b" strokeWidth="3" />
+        <text x="410" y="273" textAnchor="middle" fill="#fde68a" fontWeight="800">Notas</text>
+        <rect x="560" y="235" width="200" height="60" rx="16" fill="#1e293b" stroke="#a78bfa" strokeWidth="3" />
+        <text x="660" y="273" textAnchor="middle" fill="#ddd6fe" fontWeight="800">Biblioteca</text>
+      </svg>
+    </div>
+  </Card>
+
+  <div className="grid md:grid-cols-2 gap-4">
+    <Card className="border-blue-400">
+      <h3 className="text-2xl font-bold text-blue-200 mb-4">🔗 Integración</h3>
+      <p className="text-slate-300 leading-relaxed">Según el PDF, integración significa que los diferentes archivos de datos han sido organizados lógicamente para reducir la redundancia y facilitar el acceso a ellos.</p>
+      <div className="bg-blue-900 bg-opacity-30 rounded-xl p-4 border border-blue-500 mt-4">
+        <p className="text-slate-200 font-bold">Idea simple:</p>
+        <p className="text-slate-300">Los datos ya no están dispersos sin relación; se organizan en una estructura lógica común.</p>
+      </div>
+    </Card>
+    <Card className="border-purple-400">
+      <h3 className="text-2xl font-bold text-purple-200 mb-4">👥 Compartición</h3>
+      <p className="text-slate-300 leading-relaxed">Según el PDF, compartición significa que todos los usuarios calificados tienen acceso a los mismos datos para usarlos en diferentes actividades.</p>
+      <div className="bg-purple-900 bg-opacity-30 rounded-xl p-4 border border-purple-500 mt-4">
+        <p className="text-slate-200 font-bold">Idea simple:</p>
+        <p className="text-slate-300">Secretaría, biblioteca o administración pueden consultar los mismos datos según sus permisos.</p>
+      </div>
+    </Card>
+  </div>
+
+  <Card className="border-cyan-400">
+    <h3 className="text-2xl font-bold text-cyan-200 mb-4">🧠 Características del enfoque de Base de Datos</h3>
+    <p className="text-slate-300 leading-relaxed mb-4">El PDF indica que en este enfoque los datos son un recurso compartido, cada usuario puede tener una visión propia de la base de datos, los datos son independientes del programa que los utiliza y existe un control centralizado mediante un SGBD.</p>
+    <div className="grid md:grid-cols-2 gap-4">
+      <div className="study-note"><b>📌 Datos compartidos</b><p className="text-sm text-slate-300 mt-1">Los datos no pertenecen solo a una aplicación; pueden ser usados por distintos usuarios calificados.</p></div>
+      <div className="study-note"><b>👁️ Visión propia del usuario</b><p className="text-sm text-slate-300 mt-1">Cada usuario puede ver la información que necesita de acuerdo con sus requerimientos.</p></div>
+      <div className="study-note"><b>🧩 Independencia de programas</b><p className="text-sm text-slate-300 mt-1">Los datos se almacenan de tal forma que no dependen directamente del programa que los usa.</p></div>
+      <div className="study-note"><b>🎛️ Control centralizado</b><p className="text-sm text-slate-300 mt-1">El acceso, ingreso, modificación, eliminación y recuperación se controlan mediante un SGBD.</p></div>
+    </div>
+  </Card>
+
+  <Card className="border-indigo-400">
+    <h3 className="text-2xl font-bold text-indigo-200 mb-4">🤖 SGBD / DBMS</h3>
+    <p className="text-slate-300 leading-relaxed mb-4">El Sistema Gestor de Base de Datos es el software que permite administrar la base de datos. En inglés se conoce como DBMS: Database Manager System.</p>
+    <div className="grid md:grid-cols-3 gap-3 text-center">
+      <div className="bg-slate-900 rounded-2xl p-4 border border-slate-600"><div className="text-4xl mb-2">👤</div><b>Usuario</b><p className="text-xs text-slate-400 mt-2">Solicita o modifica datos.</p><p className="text-2xl text-indigo-300 mt-2">↓</p></div>
+      <div className="bg-indigo-900 bg-opacity-40 rounded-2xl p-4 border border-indigo-500"><div className="text-4xl mb-2">🤖</div><b>SGBD</b><p className="text-xs text-slate-300 mt-2">Controla operaciones sobre los datos.</p><p className="text-2xl text-indigo-300 mt-2">↓</p></div>
+      <div className="bg-slate-900 rounded-2xl p-4 border border-slate-600"><div className="text-4xl mb-2">🗄️</div><b>Base de Datos</b><p className="text-xs text-slate-400 mt-2">Datos relacionados y almacenados.</p></div>
+    </div>
+    <div className="grid md:grid-cols-5 gap-3 mt-5 text-center text-sm">
+      {['Acceso','Ingreso','Modificación','Eliminación','Recuperación'].map((x,i)=><div key={i} className="bg-slate-900 rounded-xl p-3 border border-indigo-500 font-bold text-indigo-100">{x}</div>)}
+    </div>
+  </Card>
+
+  <Card className="border-emerald-400">
+    <h3 className="text-2xl font-bold text-emerald-200 mb-4">✅ Ventajas del enfoque de Base de Datos</h3>
+    <p className="text-slate-300 leading-relaxed mb-4">El PDF destaca tres ventajas principales de implementar el enfoque de base de datos.</p>
+    <div className="grid md:grid-cols-3 gap-4">
+      <div className="bg-emerald-900 bg-opacity-30 rounded-2xl p-5 border border-emerald-500"><h4 className="font-bold text-emerald-200 mb-2">✅ Mínima redundancia</h4><p className="text-slate-300 text-sm">Al integrar los datos en una sola estructura lógica, cada ocurrencia se almacena en un solo lugar.</p></div>
+      <div className="bg-emerald-900 bg-opacity-30 rounded-2xl p-5 border border-emerald-500"><h4 className="font-bold text-emerald-200 mb-2">✅ Consistencia de datos</h4><p className="text-slate-300 text-sm">Como la información está en un solo lugar, las actualizaciones no producen inconsistencias.</p></div>
+      <div className="bg-emerald-900 bg-opacity-30 rounded-2xl p-5 border border-emerald-500"><h4 className="font-bold text-emerald-200 mb-2">✅ Integración de datos</h4><p className="text-slate-300 text-sm">Los datos se organizan de manera lógica, permitiendo definir relaciones entre ellos.</p></div>
+    </div>
+  </Card>
+
+  <Card className="border-amber-400">
+    <h3 className="text-2xl font-bold text-amber-200 mb-4">⚠️ Desventajas del enfoque de Base de Datos</h3>
+    <p className="text-slate-300 leading-relaxed mb-4">El enfoque de base de datos también tiene exigencias. El PDF menciona tres desventajas principales que debes recordar.</p>
+    <div className="grid md:grid-cols-3 gap-4">
+      <div className="bg-amber-900 bg-opacity-30 rounded-2xl p-5 border border-amber-500"><h4 className="font-bold text-amber-200 mb-2">⚠️ Personal especializado</h4><p className="text-slate-300 text-sm">Se requiere personal capacitado para diseñar, administrar y convertir sistemas existentes.</p></div>
+      <div className="bg-amber-900 bg-opacity-30 rounded-2xl p-5 border border-amber-500"><h4 className="font-bold text-amber-200 mb-2">⚠️ Necesidad de respaldos</h4><p className="text-slate-300 text-sm">Al existir mínima redundancia, se necesitan respaldos para recuperar archivos dañados.</p></div>
+      <div className="bg-amber-900 bg-opacity-30 rounded-2xl p-5 border border-amber-500"><h4 className="font-bold text-amber-200 mb-2">⚠️ Problemas al compartir datos</h4><p className="text-slate-300 text-sm">El acceso concurrente puede causar inconsistencias o bloqueos de datos, conocidos como DeadLock.</p></div>
+    </div>
+  </Card>
+
+  <Card className="border-purple-400">
+    <h3 className="text-2xl font-bold text-purple-200 mb-4">🏫 Caso práctico: Universidad</h3>
+    <p className="text-slate-300 leading-relaxed mb-4">Imagina una universidad que tiene sistemas de matrículas, notas, biblioteca y pagos.</p>
+    <div className="grid md:grid-cols-2 gap-4">
+      <div className="bg-red-900 bg-opacity-30 rounded-2xl p-5 border border-red-500">
+        <h4 className="font-bold text-red-200 mb-3">Enfoque tradicional</h4>
+        <p className="text-slate-300 text-sm">Cada sistema guarda nombre, rut y carrera del alumno en archivos separados.</p>
+        <p className="text-red-200 font-bold mt-3">Problema: redundancia, descentralización y actualización lenta.</p>
+      </div>
+      <div className="bg-emerald-900 bg-opacity-30 rounded-2xl p-5 border border-emerald-500">
+        <h4 className="font-bold text-emerald-200 mb-3">Enfoque Base de Datos</h4>
+        <p className="text-slate-300 text-sm">La entidad ALUMNO se almacena una vez y los distintos sistemas consultan esa información.</p>
+        <p className="text-emerald-200 font-bold mt-3">Resultado: integración, consistencia y compartición.</p>
+      </div>
+    </div>
+  </Card>
+
+  <Card className="border-slate-500">
+    <h3 className="text-2xl font-bold text-indigo-300 mb-4">⚖️ Comparación rápida</h3>
+    <div className="overflow-auto">
+      <table className="w-full text-sm border border-slate-600 rounded-xl overflow-hidden">
+        <thead><tr className="bg-indigo-900"><th className="p-3 text-left">Aspecto</th><th className="p-3 text-left">Enfoque tradicional de archivos</th><th className="p-3 text-left">Enfoque de Base de Datos</th></tr></thead>
+        <tbody>
+          <tr className="border-t border-slate-600"><td className="p-3 font-bold">Organización</td><td className="p-3">Archivos individuales por aplicación.</td><td className="p-3">Datos relacionados en una estructura común.</td></tr>
+          <tr className="border-t border-slate-600"><td className="p-3 font-bold">Redundancia</td><td className="p-3">Alta: datos repetidos.</td><td className="p-3">Mínima: datos integrados.</td></tr>
+          <tr className="border-t border-slate-600"><td className="p-3 font-bold">Actualización</td><td className="p-3">Más lenta y distribuida.</td><td className="p-3">Centralizada y consistente.</td></tr>
+          <tr className="border-t border-slate-600"><td className="p-3 font-bold">Usuarios</td><td className="p-3">Cada aplicación usa sus propios archivos.</td><td className="p-3">Múltiples usuarios calificados pueden compartir datos.</td></tr>
+          <tr className="border-t border-slate-600"><td className="p-3 font-bold">Control</td><td className="p-3">Más disperso.</td><td className="p-3">Control centralizado mediante SGBD.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </Card>
+
+  <Card className="border-red-400">
+    <h3 className="text-2xl font-bold text-red-200 mb-4">🚨 Pregunta típica de evaluación</h3>
+    <p className="text-slate-300 mb-4">¿Cuál de las siguientes opciones corresponde a una desventaja del enfoque de Base de Datos?</p>
+    <div className="space-y-3">
+      <div className="bg-slate-900 rounded-xl p-4 border border-slate-600">A) Mínima redundancia de datos</div>
+      <div className="bg-slate-900 rounded-xl p-4 border border-slate-600">B) Consistencia de los datos</div>
+      <div className="bg-emerald-900 bg-opacity-40 rounded-xl p-4 border border-emerald-500">C) Necesidad de respaldos</div>
+    </div>
+    <p className="text-emerald-200 mt-4 font-bold">✅ Respuesta correcta: C. El PDF menciona la necesidad de respaldos como una desventaja del enfoque de Base de Datos.</p>
+  </Card>
+
+  <Card className="border-yellow-400">
+    <h3 className="text-2xl font-bold text-yellow-200 mb-4">⚠️ Error frecuente</h3>
+    <div className="grid md:grid-cols-2 gap-4">
+      <div className="bg-red-900 bg-opacity-30 rounded-2xl p-5 border border-red-500"><h4 className="font-bold text-red-200 mb-2">❌ Incorrecto</h4><p>Base de Datos = Programa</p></div>
+      <div className="bg-emerald-900 bg-opacity-30 rounded-2xl p-5 border border-emerald-500"><h4 className="font-bold text-emerald-200 mb-2">✅ Correcto</h4><p>Base de Datos = Datos relacionados y permanentes.</p><p>SGBD = Software que administra esos datos.</p></div>
+    </div>
+  </Card>
+
+  <Card className="border-emerald-400 bg-emerald-900 bg-opacity-20">
+    <h3 className="text-2xl font-bold text-emerald-200 mb-3">💡 Idea clave para memorizar</h3>
+    <p className="text-slate-200 leading-relaxed"><b>Enfoque tradicional:</b> archivos separados por aplicación, datos redundantes, datos descentralizados y actualización lenta.</p>
+    <p className="text-slate-200 leading-relaxed mt-2"><b>Enfoque de Base de Datos:</b> datos relacionados, permanentes, integrados y compartidos por múltiples usuarios.</p>
+    <p className="text-slate-200 leading-relaxed mt-2"><b>SGBD:</b> software que controla acceso, ingreso, modificación, eliminación y recuperación de datos.</p>
+  </Card>
+</div>,
+ ciclo:<div className="space-y-5">
+
+  <Card className="border-cyan-400">
+    <p className="text-cyan-300 font-bold mb-1">🔄 Según el PDF · Semana 1</p>
+    <h2 className="text-3xl md:text-4xl font-black mb-3">Ciclo de Vida de una Base de Datos</h2>
+    <p className="text-slate-300 leading-relaxed">
+      El PDF presenta el ciclo de vida como una secuencia de etapas para pasar desde los requerimientos iniciales hasta una base de datos implementada y optimizada.
+    </p>
+  </Card>
+
+  <Card className="border-indigo-400">
+    <h3 className="text-2xl font-bold text-indigo-200 mb-4">🧭 Vista general del ciclo</h3>
+    <p className="text-slate-300 leading-relaxed mb-5">
+      La secuencia principal del PDF es: Diseño Conceptual, Selección del Software para DBMS, Diseño Lógico y Diseño Físico.
+    </p>
+
+    <div className="grid md:grid-cols-4 gap-3 text-center">
+      <div className="bg-yellow-600 rounded-2xl p-5 border border-yellow-300 shadow-xl">
+        <div className="text-4xl mb-2">🧩</div>
+        <h4 className="font-black text-lg">1. Diseño Conceptual</h4>
+        <p className="text-sm mt-2">Requerimientos → Esquema conceptual.</p>
+      </div>
+
+      <div className="bg-red-600 rounded-2xl p-5 border border-red-300 shadow-xl">
+        <div className="text-4xl mb-2">🛠️</div>
+        <h4 className="font-black text-lg">2. Selección DBMS</h4>
+        <p className="text-sm mt-2">Elección del software gestor.</p>
+      </div>
+
+      <div className="bg-blue-600 rounded-2xl p-5 border border-blue-300 shadow-xl">
+        <div className="text-4xl mb-2">📐</div>
+        <h4 className="font-black text-lg">3. Diseño Lógico</h4>
+        <p className="text-sm mt-2">Esquema conceptual → Esquema lógico.</p>
+      </div>
+
+      <div className="bg-orange-600 rounded-2xl p-5 border border-orange-300 shadow-xl">
+        <div className="text-4xl mb-2">💾</div>
+        <h4 className="font-black text-lg">4. Diseño Físico</h4>
+        <p className="text-sm mt-2">Esquema lógico → Esquema físico.</p>
+      </div>
+    </div>
+  </Card>
+
+  <Card className="border-yellow-400 bg-yellow-900 bg-opacity-20">
+    <p className="text-yellow-300 font-bold mb-1">📌 Etapa 1 del PDF</p>
+    <h3 className="text-2xl font-bold text-yellow-200 mb-4">Diseño Conceptual</h3>
+    <p className="text-slate-300 leading-relaxed mb-4">
+      Según el PDF, el diseño conceptual comienza con la especificación de requerimientos y su resultado es el esquema conceptual.
+    </p>
+
+    <div className="grid md:grid-cols-2 gap-4">
+      <div className="bg-slate-900 rounded-2xl p-5 border border-yellow-500">
+        <h4 className="font-bold text-yellow-300 mb-3">Entrada</h4>
+        <p className="text-slate-300">Especificación de requerimientos.</p>
+      </div>
+
+      <div className="bg-slate-900 rounded-2xl p-5 border border-yellow-500">
+        <h4 className="font-bold text-yellow-300 mb-3">Resultado</h4>
+        <p className="text-slate-300">Esquema conceptual.</p>
+      </div>
+    </div>
+
+    <div className="bg-slate-900 rounded-2xl p-5 border border-yellow-500 mt-4">
+      <h4 className="font-bold text-yellow-300 mb-3">¿Qué se define en esta etapa?</h4>
+      <div className="grid md:grid-cols-4 gap-3 text-center">
+        <div className="bg-yellow-900 bg-opacity-30 rounded-xl p-3 border border-yellow-500">🏷️ Entidades</div>
+        <div className="bg-yellow-900 bg-opacity-30 rounded-xl p-3 border border-yellow-500">📝 Atributos</div>
+        <div className="bg-yellow-900 bg-opacity-30 rounded-xl p-3 border border-yellow-500">🔗 Relaciones</div>
+        <div className="bg-yellow-900 bg-opacity-30 rounded-xl p-3 border border-yellow-500">📊 Modelo E/R</div>
+      </div>
+    </div>
+  </Card>
+
+  <Card className="border-red-400 bg-red-900 bg-opacity-20">
+    <p className="text-red-300 font-bold mb-1">📌 Etapa 2 del PDF</p>
+    <h3 className="text-2xl font-bold text-red-200 mb-4">Selección del Software para DBMS</h3>
+    <p className="text-slate-300 leading-relaxed mb-4">
+      Después del diseño conceptual, se selecciona el software para DBMS, es decir, el Sistema Gestor de Base de Datos que permitirá implementar y administrar la base de datos.
+    </p>
+
+    <div className="bg-slate-900 rounded-2xl p-5 border border-red-500">
+      <h4 className="font-bold text-red-300 mb-3">¿Qué significa DBMS o SGBD?</h4>
+      <p className="text-slate-300">
+        Es el software que permite gestionar la base de datos. En secciones anteriores del PDF se menciona que el SGBD controla operaciones como acceso, ingreso, modificación, eliminación y recuperación de datos.
+      </p>
+    </div>
+  </Card>
+
+  <Card className="border-blue-400 bg-blue-900 bg-opacity-20">
+    <p className="text-blue-300 font-bold mb-1">📌 Etapa 3 del PDF</p>
+    <h3 className="text-2xl font-bold text-blue-200 mb-4">Diseño Lógico</h3>
+    <p className="text-slate-300 leading-relaxed mb-4">
+      Según el PDF, el diseño lógico comienza desde el esquema conceptual y da como resultado un esquema lógico.
+    </p>
+
+    <div className="grid md:grid-cols-2 gap-4">
+      <div className="bg-slate-900 rounded-2xl p-5 border border-blue-500">
+        <h4 className="font-bold text-blue-300 mb-3">Entrada</h4>
+        <p className="text-slate-300">Esquema conceptual.</p>
+      </div>
+
+      <div className="bg-slate-900 rounded-2xl p-5 border border-blue-500">
+        <h4 className="font-bold text-blue-300 mb-3">Resultado</h4>
+        <p className="text-slate-300">Esquema lógico.</p>
+      </div>
+    </div>
+
+    <div className="bg-slate-900 rounded-2xl p-5 border border-blue-500 mt-4">
+      <h4 className="font-bold text-blue-300 mb-3">¿Qué describe el esquema lógico?</h4>
+      <p className="text-slate-300">
+        Es una descripción de la estructura de la base de datos, incluyendo definiciones de tablas, vistas, etc.
+      </p>
+    </div>
+
+    <div className="bg-blue-900 bg-opacity-30 border border-blue-500 rounded-2xl p-5 mt-4">
+      <h4 className="font-bold text-blue-200 mb-2">💡 Idea clave</h4>
+      <p className="text-slate-300">
+        En esta etapa el modelo conceptual comienza a transformarse en una estructura más cercana a la implementación en un SGBD comercial.
+      </p>
+    </div>
+  </Card>
+
+  <Card className="border-orange-400 bg-orange-900 bg-opacity-20">
+    <p className="text-orange-300 font-bold mb-1">📌 Etapa 4 del PDF</p>
+    <h3 className="text-2xl font-bold text-orange-200 mb-4">Diseño Físico</h3>
+    <p className="text-slate-300 leading-relaxed mb-4">
+      Según el PDF, el diseño físico comienza desde el esquema lógico y da como resultado un esquema físico.
+    </p>
+
+    <div className="grid md:grid-cols-2 gap-4">
+      <div className="bg-slate-900 rounded-2xl p-5 border border-orange-500">
+        <h4 className="font-bold text-orange-300 mb-3">Entrada</h4>
+        <p className="text-slate-300">Esquema lógico.</p>
+      </div>
+
+      <div className="bg-slate-900 rounded-2xl p-5 border border-orange-500">
+        <h4 className="font-bold text-orange-300 mb-3">Resultado</h4>
+        <p className="text-slate-300">Esquema físico.</p>
+      </div>
+    </div>
+
+    <div className="bg-slate-900 rounded-2xl p-5 border border-orange-500 mt-4">
+      <h4 className="font-bold text-orange-300 mb-3">¿Qué se define?</h4>
+      <p className="text-slate-300">
+        Se definen estructuras de almacenamiento y rutas de acceso para lograr un desempeño óptimo.
+      </p>
+    </div>
+
+    <div className="bg-orange-900 bg-opacity-30 border border-orange-500 rounded-2xl p-5 mt-4">
+      <h4 className="font-bold text-orange-200 mb-2">También ocurre en paralelo</h4>
+      <p className="text-slate-300">
+        El PDF indica que, en paralelo, se diseñan e implementan programas en forma de transacciones de base de datos.
+      </p>
+    </div>
+  </Card>
+
+  <Card className="border-purple-400">
+    <h3 className="text-2xl font-bold text-purple-200 mb-4">🧠 Cómo entenderlo fácilmente</h3>
+    <p className="text-slate-300 leading-relaxed mb-5">
+      El ciclo puede entenderse como un proceso que va desde la idea general del negocio hasta la forma concreta en que la base de datos será almacenada y utilizada.
+    </p>
+
+    <div className="grid md:grid-cols-4 gap-3 text-center">
+      <div className="bg-slate-900 rounded-2xl p-4 border border-purple-500">
+        <h4 className="font-bold text-purple-300 mb-2">1. Entender</h4>
+        <p className="text-slate-300 text-sm">Qué necesita la organización.</p>
+      </div>
+      <div className="bg-slate-900 rounded-2xl p-4 border border-purple-500">
+        <h4 className="font-bold text-purple-300 mb-2">2. Modelar</h4>
+        <p className="text-slate-300 text-sm">Entidades, atributos y relaciones.</p>
+      </div>
+      <div className="bg-slate-900 rounded-2xl p-4 border border-purple-500">
+        <h4 className="font-bold text-purple-300 mb-2">3. Estructurar</h4>
+        <p className="text-slate-300 text-sm">Tablas, vistas y esquema lógico.</p>
+      </div>
+      <div className="bg-slate-900 rounded-2xl p-4 border border-purple-500">
+        <h4 className="font-bold text-purple-300 mb-2">4. Optimizar</h4>
+        <p className="text-slate-300 text-sm">Almacenamiento, accesos y rendimiento.</p>
+      </div>
+    </div>
+  </Card>
+
+  <Card className="border-yellow-400">
+    <h3 className="text-2xl font-bold text-yellow-200 mb-4">⚠️ Lo que debes recordar para la prueba</h3>
+    <div className="grid md:grid-cols-2 gap-4">
+      <div className="bg-slate-900 rounded-2xl p-5 border border-yellow-500">
+        <h4 className="font-bold text-yellow-300 mb-2">Diseño Conceptual</h4>
+        <p className="text-slate-300 text-sm">Parte de los requerimientos y genera el esquema conceptual. Define entidades, atributos, relaciones y modelo E/R.</p>
+      </div>
+      <div className="bg-slate-900 rounded-2xl p-5 border border-yellow-500">
+        <h4 className="font-bold text-yellow-300 mb-2">Selección DBMS</h4>
+        <p className="text-slate-300 text-sm">Se elige el software gestor de base de datos.</p>
+      </div>
+      <div className="bg-slate-900 rounded-2xl p-5 border border-yellow-500">
+        <h4 className="font-bold text-yellow-300 mb-2">Diseño Lógico</h4>
+        <p className="text-slate-300 text-sm">Parte del esquema conceptual y genera el esquema lógico, con tablas y vistas.</p>
+      </div>
+      <div className="bg-slate-900 rounded-2xl p-5 border border-yellow-500">
+        <h4 className="font-bold text-yellow-300 mb-2">Diseño Físico</h4>
+        <p className="text-slate-300 text-sm">Parte del esquema lógico y genera el esquema físico, definiendo almacenamiento y rutas de acceso.</p>
+      </div>
+    </div>
+  </Card>
+
+  <Card className="border-red-400">
+    <h3 className="text-2xl font-bold text-red-200 mb-4">🚨 Pregunta típica de evaluación</h3>
+    <p className="text-slate-300 mb-4">¿Cuál etapa del ciclo de vida define entidades, atributos, relaciones y dibuja el modelo E/R?</p>
+    <div className="space-y-3">
+      <div className="bg-emerald-900 bg-opacity-40 rounded-xl p-4 border border-emerald-500">A) Diseño Conceptual</div>
+      <div className="bg-slate-900 rounded-xl p-4 border border-slate-600">B) Diseño Físico</div>
+      <div className="bg-slate-900 rounded-xl p-4 border border-slate-600">C) Selección del DBMS</div>
+    </div>
+    <p className="text-emerald-200 mt-4 font-bold">✅ Respuesta correcta: A.</p>
+  </Card>
+
+</div>,
+ modelos:<div className="space-y-5">
+
+  <Card className="border-cyan-400">
+    <p className="text-cyan-300 font-bold mb-1">🧠 Según el PDF · Semana 1</p>
+    <h2 className="text-3xl md:text-4xl font-black mb-3">Abstracción y Modelos de Datos</h2>
+    <p className="text-slate-300 leading-relaxed">
+      En esta sección el PDF explica cómo representar la realidad de una organización mediante abstracción y modelos de datos. La idea central es quedarse con lo importante y dejar fuera los detalles que no aportan al problema.
+    </p>
+  </Card>
+
+  <Card className="border-indigo-400">
+    <h3 className="text-2xl font-bold text-indigo-200 mb-4">🔍 1. Abstracción de datos</h3>
+    <p className="text-slate-300 leading-relaxed mb-4">
+      Los sistemas de bases de datos proporcionan cierto nivel de abstracción. Esto significa que no se trabaja con toda la realidad, sino con una representación de sus características esenciales.
+    </p>
+
+    <div className="grid md:grid-cols-2 gap-4">
+      <div className="bg-slate-900 rounded-2xl p-5 border border-indigo-500">
+        <h4 className="font-bold text-indigo-300 mb-3">La abstracción suprime</h4>
+        <p className="text-slate-300">Los detalles irrelevantes que no son necesarios para el problema.</p>
+      </div>
+
+      <div className="bg-slate-900 rounded-2xl p-5 border border-indigo-500">
+        <h4 className="font-bold text-indigo-300 mb-3">La abstracción busca</h4>
+        <p className="text-slate-300">La esencia de aquello que se quiere representar.</p>
+      </div>
+    </div>
+
+    <div className="bg-indigo-900 bg-opacity-30 border border-indigo-500 rounded-2xl p-5 mt-4">
+      <h4 className="font-bold text-indigo-200 mb-2">💡 Definición clave</h4>
+      <p className="text-slate-300">
+        La abstracción de datos es el proceso de reconocer las características importantes de una situación u objeto.
+      </p>
+    </div>
+  </Card>
+
+  <Card className="border-purple-400">
+    <h3 className="text-2xl font-bold text-purple-200 mb-4">👤 Ejemplo del PDF: una misma persona, distintas perspectivas</h3>
+    <p className="text-slate-300 leading-relaxed mb-5">
+      El PDF utiliza el ejemplo de una persona para mostrar que la abstracción depende del punto de vista. No todos necesitan observar los mismos datos.
+    </p>
+
+    <div className="grid md:grid-cols-2 gap-4">
+      <div className="bg-slate-900 rounded-2xl p-5 border border-rose-500">
+        <h4 className="text-xl font-bold text-rose-300 mb-3">🏥 Médico → Paciente</h4>
+        <p className="text-slate-300 text-sm mb-3">El médico está interesado en datos relacionados con la salud.</p>
+        <ul className="text-slate-300 text-sm space-y-1">
+          <li>• Nombre</li>
+          <li>• Altura</li>
+          <li>• Peso</li>
+          <li>• Edad</li>
+          <li>• Grupo sanguíneo</li>
+          <li>• Enfermedades anteriores o existentes</li>
+        </ul>
+      </div>
+
+      <div className="bg-slate-900 rounded-2xl p-5 border border-emerald-500">
+        <h4 className="text-xl font-bold text-emerald-300 mb-3">🏢 Empleador → Empleado</h4>
+        <p className="text-slate-300 text-sm mb-3">El empleador está interesado en datos laborales y formativos.</p>
+        <ul className="text-slate-300 text-sm space-y-1">
+          <li>• Nombre</li>
+          <li>• Edad</li>
+          <li>• Salud</li>
+          <li>• Grado de estudio</li>
+          <li>• Trabajo que desempeña</li>
+          <li>• Experiencia</li>
+        </ul>
+      </div>
+    </div>
+
+    <div className="bg-purple-900 bg-opacity-30 border border-purple-500 rounded-2xl p-5 mt-4">
+      <h4 className="font-bold text-purple-200 mb-2">📌 Idea importante</h4>
+      <p className="text-slate-300">
+        La persona es la misma, pero los datos relevantes cambian según el objetivo. Eso es abstraer: elegir solo lo necesario para representar una situación.
+      </p>
+    </div>
+  </Card>
+
+  <Card className="border-blue-400">
+    <h3 className="text-2xl font-bold text-blue-200 mb-4">📐 2. ¿Qué es un Modelo de Datos?</h3>
+    <p className="text-slate-300 leading-relaxed mb-4">
+      Según el PDF, los modelos de datos son el instrumento principal para ofrecer la abstracción de la realidad.
+    </p>
+
+    <div className="bg-slate-900 rounded-2xl p-5 border border-blue-500 mb-4">
+      <h4 className="font-bold text-blue-300 mb-2">Definición del PDF</h4>
+      <p className="text-slate-300">
+        Un modelo es una representación de personas, objetos y eventos del mundo real y sus asociaciones.
+      </p>
+    </div>
+
+    <div className="bg-slate-900 rounded-2xl p-5 border border-blue-500">
+      <h4 className="font-bold text-blue-300 mb-2">Modelo de datos</h4>
+      <p className="text-slate-300">
+        Se define como una descripción abstracta de los datos acerca de entidades y asociaciones existentes entre ellas.
+      </p>
+    </div>
+  </Card>
+
+  <Card className="border-emerald-400">
+    <h3 className="text-2xl font-bold text-emerald-200 mb-4">🎯 Objetivos de un Modelo de Datos</h3>
+    <p className="text-slate-300 leading-relaxed mb-4">
+      El PDF indica que un modelo de datos tiene dos objetivos principales:
+    </p>
+
+    <div className="grid md:grid-cols-2 gap-4">
+      <div className="bg-slate-900 rounded-2xl p-6 border border-emerald-500 text-center">
+        <div className="text-5xl mb-3">📊</div>
+        <h4 className="font-black text-emerald-300 text-xl mb-2">Representar datos</h4>
+        <p className="text-slate-300 text-sm">Mostrar de forma ordenada los datos que necesita la organización.</p>
+      </div>
+
+      <div className="bg-slate-900 rounded-2xl p-6 border border-emerald-500 text-center">
+        <div className="text-5xl mb-3">👁️</div>
+        <h4 className="font-black text-emerald-300 text-xl mb-2">Ser comprensible</h4>
+        <p className="text-slate-300 text-sm">Debe ser fácil de entender para quienes participan en el diseño.</p>
+      </div>
+    </div>
+
+    <div className="bg-emerald-900 bg-opacity-30 border border-emerald-500 rounded-2xl p-5 mt-4">
+      <h4 className="font-bold text-emerald-200 mb-2">💡 Clave del PDF</h4>
+      <p className="text-slate-300">
+        Si el modelo representa en forma exacta y completa los datos requeridos por la organización, y además es fácil de entender, puede usarse para desarrollar una aplicación o sistema de información.
+      </p>
+    </div>
+  </Card>
+
+  <Card className="border-cyan-400">
+    <h3 className="text-2xl font-bold text-cyan-200 mb-4">🏗️ 3. Niveles de abstracción</h3>
+    <p className="text-slate-300 leading-relaxed mb-5">
+      El PDF distingue tres tipos de modelos o niveles de abstracción. Su objetivo es separar la aplicación de la base de datos física.
+    </p>
+
+    <div className="grid md:grid-cols-3 gap-4">
+      <div className="bg-slate-900 rounded-2xl p-5 border border-cyan-500">
+        <div className="text-4xl mb-3">👤</div>
+        <h4 className="text-xl font-black text-cyan-300 mb-3">Modelo Externo</h4>
+        <p className="text-slate-300 text-sm">
+          Representa lo que el usuario visualiza de la realidad. También se conoce como vista de usuario.
+        </p>
+      </div>
+
+      <div className="bg-slate-900 rounded-2xl p-5 border border-indigo-500">
+        <div className="text-4xl mb-3">🧩</div>
+        <h4 className="text-xl font-black text-indigo-300 mb-3">Modelo Conceptual</h4>
+        <p className="text-slate-300 text-sm">
+          Consolida las visiones de las distintas personas involucradas en la realidad que se quiere representar.
+        </p>
+      </div>
+
+      <div className="bg-slate-900 rounded-2xl p-5 border border-orange-500">
+        <div className="text-4xl mb-3">💾</div>
+        <h4 className="text-xl font-black text-orange-300 mb-3">Modelo Interno</h4>
+        <p className="text-slate-300 text-sm">
+          Se relaciona con la tecnología, el DBMS, el sistema operativo, los métodos de acceso y el almacenamiento físico.
+        </p>
+      </div>
+    </div>
+  </Card>
+
+  <Card className="border-cyan-400 bg-cyan-900 bg-opacity-20">
+    <h3 className="text-2xl font-bold text-cyan-200 mb-4">👤 Modelo Externo</h3>
+    <p className="text-slate-300 leading-relaxed mb-4">
+      El modelo externo se refiere a lo que el usuario visualiza de la realidad que se representa.
+    </p>
+
+    <div className="bg-slate-900 rounded-2xl p-5 border border-cyan-500">
+      <h4 className="font-bold text-cyan-300 mb-3">Según el PDF</h4>
+      <ul className="text-slate-300 text-sm space-y-2">
+        <li>• Permite que los usuarios expliquen sus requerimientos al analista.</li>
+        <li>• Es independiente de la tecnología o DBMS existente.</li>
+        <li>• También se denomina vista de usuario.</li>
+      </ul>
+    </div>
+  </Card>
+
+  <Card className="border-indigo-400 bg-indigo-900 bg-opacity-20">
+    <h3 className="text-2xl font-bold text-indigo-200 mb-4">🧩 Modelo Conceptual</h3>
+    <p className="text-slate-300 leading-relaxed mb-4">
+      El modelo conceptual consolida las visiones de las distintas personas involucradas en la realidad a representar.
+    </p>
+
+    <div className="bg-slate-900 rounded-2xl p-5 border border-indigo-500">
+      <h4 className="font-bold text-indigo-300 mb-3">Según el PDF, permite:</h4>
+      <ul className="text-slate-300 text-sm space-y-2">
+        <li>• Chequear consistencias.</li>
+        <li>• Validar que todos los datos hayan sido identificados.</li>
+        <li>• Validar que las asociaciones entre datos hayan sido identificadas.</li>
+        <li>• Capturar el significado de los datos.</li>
+        <li>• Registrar información sobre el uso y mantención de los datos.</li>
+      </ul>
+    </div>
+  </Card>
+
+  <Card className="border-orange-400 bg-orange-900 bg-opacity-20">
+    <h3 className="text-2xl font-bold text-orange-200 mb-4">💾 Modelo Interno</h3>
+    <p className="text-slate-300 leading-relaxed mb-4">
+      El modelo interno entrega la interfaz con la tecnología. Es el nivel que trata los aspectos de almacenamiento físico de la información.
+    </p>
+
+    <div className="bg-slate-900 rounded-2xl p-5 border border-orange-500">
+      <h4 className="font-bold text-orange-300 mb-3">Se relaciona con:</h4>
+      <ul className="text-slate-300 text-sm space-y-2">
+        <li>• DBMS.</li>
+        <li>• Sistema operativo.</li>
+        <li>• Métodos de acceso.</li>
+        <li>• Otros programas.</li>
+        <li>• Representación de almacenamiento de la información.</li>
+      </ul>
+    </div>
+  </Card>
+
+  <Card className="border-purple-400">
+    <h3 className="text-2xl font-bold text-purple-200 mb-4">🏠 Paralelo del PDF: construir una casa y construir una BD</h3>
+    <p className="text-slate-300 leading-relaxed mb-5">
+      El PDF compara la construcción de una casa con la construcción de una base de datos. La idea es que antes de construir físicamente, primero se entiende lo que se necesita y se representa en modelos.
+    </p>
+
+    <div className="grid md:grid-cols-2 gap-4">
+      <div className="bg-slate-900 rounded-2xl p-5 border border-purple-500">
+        <h4 className="font-bold text-purple-300 mb-3">🏠 Casa</h4>
+        <p className="text-slate-300 text-sm">Primero se escuchan requerimientos, luego se hace una maqueta o plano y finalmente se construye.</p>
+      </div>
+
+      <div className="bg-slate-900 rounded-2xl p-5 border border-purple-500">
+        <h4 className="font-bold text-purple-300 mb-3">🗄️ Base de Datos</h4>
+        <p className="text-slate-300 text-sm">Primero se conocen las vistas de usuarios, luego se crea el modelo de datos, después el esquema de BD y finalmente la base física.</p>
+      </div>
+    </div>
+  </Card>
+
+  <Card className="border-blue-400">
+    <h3 className="text-2xl font-bold text-blue-200 mb-4">🧱 4. Tipos de Modelos Conceptuales</h3>
+    <p className="text-slate-300 leading-relaxed mb-5">
+      El PDF indica que los modelos de datos se pueden clasificar en varias categorías. Cada uno permite representar con distintos símbolos las características y significado de los datos.
+    </p>
+
+    <div className="grid md:grid-cols-2 gap-4">
+      <div className="bg-slate-900 rounded-2xl p-5 border border-blue-500">
+        <h4 className="font-bold text-blue-300 mb-2">Modelo Entidad-Relación (E/R)</h4>
+        <p className="text-slate-300 text-sm">Se basa en una percepción del mundo real formada por entidades y relaciones entre ellas.</p>
+      </div>
+
+      <div className="bg-slate-900 rounded-2xl p-5 border border-blue-500">
+        <h4 className="font-bold text-blue-300 mb-2">Modelo Relacional</h4>
+        <p className="text-slate-300 text-sm">Usa una colección de tablas para representar datos y relaciones. Cada tabla tiene columnas con nombre único.</p>
+      </div>
+
+      <div className="bg-slate-900 rounded-2xl p-5 border border-blue-500">
+        <h4 className="font-bold text-blue-300 mb-2">Modelo Orientado a Objetos</h4>
+        <p className="text-slate-300 text-sm">Puede considerarse una extensión del modelo E/R con conceptos como encapsulación, métodos y objetos.</p>
+      </div>
+
+      <div className="bg-slate-900 rounded-2xl p-5 border border-blue-500">
+        <h4 className="font-bold text-blue-300 mb-2">Modelos de Red y Jerárquicos</h4>
+        <p className="text-slate-300 text-sm">Antecedieron al modelo relacional y hoy se usan muy poco porque complicaban el modelamiento de datos.</p>
+      </div>
+    </div>
+  </Card>
+
+  <Card className="border-emerald-400">
+    <h3 className="text-2xl font-bold text-emerald-200 mb-4">📊 Modelo Conceptual o Modelo Entidad-Relación</h3>
+    <p className="text-slate-300 leading-relaxed mb-4">
+      El PDF señala que el diseño conceptual permite crear un modelo con una descripción concisa de los requerimientos de los usuarios. A este modelo de alto nivel se le denomina Modelo Conceptual o Modelo Entidad-Relación.
+    </p>
+
+    <div className="bg-slate-900 rounded-2xl p-5 border border-emerald-500">
+      <h4 className="font-bold text-emerald-300 mb-3">Objetivo del modelo conceptual</h4>
+      <p className="text-slate-300">
+        Captar la información del mundo real que se desea representar en el mundo informático, abstraer los detalles sin importancia y representar solo la información relevante para las siguientes etapas del diseño.
+      </p>
+    </div>
+  </Card>
+
+  <Card className="border-yellow-400">
+    <h3 className="text-2xl font-bold text-yellow-200 mb-4">⚠️ Lo que debes recordar para la prueba</h3>
+    <div className="grid md:grid-cols-2 gap-4">
+      <div className="bg-slate-900 rounded-2xl p-5 border border-yellow-500">
+        <h4 className="font-bold text-yellow-300 mb-2">Abstracción</h4>
+        <p className="text-slate-300 text-sm">Reconoce características importantes y suprime detalles irrelevantes.</p>
+      </div>
+
+      <div className="bg-slate-900 rounded-2xl p-5 border border-yellow-500">
+        <h4 className="font-bold text-yellow-300 mb-2">Modelo de datos</h4>
+        <p className="text-slate-300 text-sm">Representación abstracta de datos, entidades y asociaciones.</p>
+      </div>
+
+      <div className="bg-slate-900 rounded-2xl p-5 border border-yellow-500">
+        <h4 className="font-bold text-yellow-300 mb-2">Tres niveles</h4>
+        <p className="text-slate-300 text-sm">Externo, conceptual e interno.</p>
+      </div>
+
+      <div className="bg-slate-900 rounded-2xl p-5 border border-yellow-500">
+        <h4 className="font-bold text-yellow-300 mb-2">Modelo conceptual</h4>
+        <p className="text-slate-300 text-sm">Representa la realidad a alto nivel, identificando información relevante.</p>
+      </div>
+    </div>
+  </Card>
+
+  <Card className="border-red-400">
+    <h3 className="text-2xl font-bold text-red-200 mb-4">🚨 Pregunta típica de evaluación</h3>
+    <p className="text-slate-300 mb-4">¿Cuál modelo representa lo que el usuario visualiza de la realidad?</p>
+    <div className="space-y-3">
+      <div className="bg-emerald-900 bg-opacity-40 rounded-xl p-4 border border-emerald-500">A) Modelo Externo</div>
+      <div className="bg-slate-900 rounded-xl p-4 border border-slate-600">B) Modelo Interno</div>
+      <div className="bg-slate-900 rounded-xl p-4 border border-slate-600">C) Diseño Físico</div>
+    </div>
+    <p className="text-emerald-200 mt-4 font-bold">✅ Respuesta correcta: A.</p>
+  </Card>
+
+</div>,
+ reglas:<div className="space-y-5">
+
+  <Card className="border-cyan-400">
+    <p className="text-cyan-300 font-bold mb-1">📋 Según el PDF · Semana 1</p>
+    <h2 className="text-3xl md:text-4xl font-black mb-3">Reglas del Negocio</h2>
+    <p className="text-slate-300 leading-relaxed">
+      En el PDF, las reglas del negocio aparecen antes del Modelo Entidad-Relación porque ayudan a comprender cómo funciona la organización y qué información debe representarse en la base de datos.
+    </p>
+  </Card>
+
+  <Card className="border-indigo-400">
+    <h3 className="text-2xl font-bold text-indigo-200 mb-4">📌 ¿Qué son las Reglas del Negocio?</h3>
+    <p className="text-slate-300 leading-relaxed mb-4">
+      Según el PDF, son aquello que se necesita para el manejo del negocio. Corresponden a políticas, normas, operaciones, definiciones y restricciones que determinan cómo se lleva el día a día de las operaciones en una organización.
+    </p>
+
+    <div className="grid md:grid-cols-5 gap-3 text-center">
+      {[
+        ['📜','Políticas'],
+        ['⚖️','Normas'],
+        ['⚙️','Operaciones'],
+        ['📖','Definiciones'],
+        ['🚧','Restricciones']
+      ].map((x,i)=>
+        <div key={i} className="bg-slate-900 rounded-2xl p-4 border border-indigo-500">
+          <div className="text-4xl mb-2">{x[0]}</div>
+          <b className="text-indigo-200">{x[1]}</b>
+        </div>
+      )}
+    </div>
+  </Card>
+
+  <Card className="border-purple-400">
+    <h3 className="text-2xl font-bold text-purple-200 mb-4">🧠 ¿Por qué son importantes para una Base de Datos?</h3>
+    <p className="text-slate-300 leading-relaxed mb-4">
+      Las reglas del negocio permiten entender la lógica de la organización antes de implementar el sistema. En esta etapa no interesa todavía el cómo ni dónde se implementará la base de datos, sino comprender qué necesita el negocio.
+    </p>
+
+    <div className="bg-purple-900 bg-opacity-30 border border-purple-500 rounded-2xl p-5">
+      <h4 className="font-bold text-purple-200 mb-2">💡 Idea clave</h4>
+      <p className="text-slate-300">
+        Las reglas del negocio ayudan a definir entidades, relaciones, atributos, restricciones y cardinalidades dentro del modelo conceptual.
+      </p>
+    </div>
+  </Card>
+
+  <div className="grid md:grid-cols-2 gap-4">
+    <Card className="border-emerald-400 bg-emerald-900 bg-opacity-20">
+      <p className="text-emerald-300 font-bold mb-1">📌 Ejemplo del PDF</p>
+      <h3 className="text-2xl font-bold text-emerald-200 mb-4">Cliente Premium</h3>
+      <p className="text-slate-300 leading-relaxed mb-4">
+        Un cliente que efectúa compras por más de $300.000 al año es un cliente de tipo “Premium”. A estos clientes se les aplica un descuento del 20% en todas las compras que efectúen al año siguiente.
+      </p>
+
+      <div className="bg-slate-900 rounded-2xl p-5 border border-emerald-500">
+        <h4 className="font-bold text-emerald-300 mb-3">¿Qué regla expresa?</h4>
+        <p className="text-slate-300 text-sm">
+          Si el monto anual de compras supera $300.000, entonces el cliente cambia de categoría y recibe un beneficio.
+        </p>
+      </div>
+    </Card>
+
+    <Card className="border-blue-400 bg-blue-900 bg-opacity-20">
+      <p className="text-blue-300 font-bold mb-1">📌 Ejemplo del PDF</p>
+      <h3 className="text-2xl font-bold text-blue-200 mb-4">Profesor y asignatura</h3>
+      <p className="text-slate-300 leading-relaxed mb-4">
+        Un profesor debe dictar como mínimo una asignatura en el semestre.
+      </p>
+
+      <div className="bg-slate-900 rounded-2xl p-5 border border-blue-500">
+        <h4 className="font-bold text-blue-300 mb-3">¿Qué regla expresa?</h4>
+        <p className="text-slate-300 text-sm">
+          La relación entre PROFESOR y ASIGNATURA no es opcional: cada profesor debe estar asociado al menos a una asignatura.
+        </p>
+      </div>
+    </Card>
+  </div>
+
+  <Card className="border-yellow-400">
+    <h3 className="text-2xl font-bold text-yellow-200 mb-4">🔍 De la regla al modelo</h3>
+    <p className="text-slate-300 leading-relaxed mb-5">
+      Una regla del negocio puede transformarse en elementos del Modelo Entidad-Relación. Por eso es importante leerla con atención.
+    </p>
+
+    <div className="grid md:grid-cols-3 gap-4">
+      <div className="bg-slate-900 rounded-2xl p-5 border border-yellow-500">
+        <h4 className="font-bold text-yellow-300 mb-3">1. Identificar entidades</h4>
+        <p className="text-slate-300 text-sm">Ejemplo: CLIENTE, PROFESOR, ASIGNATURA.</p>
+      </div>
+
+      <div className="bg-slate-900 rounded-2xl p-5 border border-yellow-500">
+        <h4 className="font-bold text-yellow-300 mb-3">2. Identificar atributos</h4>
+        <p className="text-slate-300 text-sm">Ejemplo: monto_anual_compras, tipo_cliente, porcentaje_descuento.</p>
+      </div>
+
+      <div className="bg-slate-900 rounded-2xl p-5 border border-yellow-500">
+        <h4 className="font-bold text-yellow-300 mb-3">3. Identificar restricciones</h4>
+        <p className="text-slate-300 text-sm">Ejemplo: el profesor debe dictar mínimo una asignatura.</p>
+      </div>
+    </div>
+  </Card>
+
+  <Card className="border-cyan-400">
+    <h3 className="text-2xl font-bold text-cyan-200 mb-4">🗣️ ¿De dónde se obtiene la información?</h3>
+    <p className="text-slate-300 leading-relaxed mb-4">
+      Según el PDF, en esta etapa interesa recoger la máxima cantidad de información posible. Esa información puede obtenerse principalmente desde dos vías:
+    </p>
+
+    <div className="grid md:grid-cols-2 gap-4">
+      <div className="bg-slate-900 rounded-2xl p-5 border border-cyan-500">
+        <div className="text-5xl mb-3">🗣️</div>
+        <h4 className="text-xl font-black text-cyan-300 mb-3">Narrativas del usuario</h4>
+        <p className="text-slate-300 text-sm">
+          Son relatos o explicaciones que entrega el usuario sobre cómo funciona el negocio y qué necesita resolver.
+        </p>
+      </div>
+
+      <div className="bg-slate-900 rounded-2xl p-5 border border-cyan-500">
+        <div className="text-5xl mb-3">📄</div>
+        <h4 className="text-xl font-black text-cyan-300 mb-3">Vistas de usuario</h4>
+        <p className="text-slate-300 text-sm">
+          Son elementos que permiten conocer las necesidades del usuario, como formularios, reportes, documentos, pantallas o registros.
+        </p>
+      </div>
+    </div>
+  </Card>
+
+  <Card className="border-indigo-400 bg-indigo-900 bg-opacity-20">
+    <h3 className="text-2xl font-bold text-indigo-200 mb-4">📄 Narrativas y vistas de usuario</h3>
+    <p className="text-slate-300 leading-relaxed mb-4">
+      El PDF explica que las vistas y narrativas de usuarios son elementos que entrega el cliente para especificar sus principales necesidades.
+    </p>
+
+    <div className="bg-slate-900 rounded-2xl p-5 border border-indigo-500">
+      <h4 className="font-bold text-indigo-300 mb-3">¿Para qué sirven?</h4>
+      <p className="text-slate-300">
+        Permiten al equipo desarrollador conocer y comprender, desde el inicio, la lógica y las necesidades del negocio.
+      </p>
+    </div>
+  </Card>
+
+  <Card className="border-orange-400">
+    <h3 className="text-2xl font-bold text-orange-200 mb-4">🧩 Pasos asociados al Diseño Conceptual</h3>
+    <p className="text-slate-300 leading-relaxed mb-5">
+      Después de recoger las reglas del negocio, el PDF enumera pasos que permiten avanzar en el diseño conceptual.
+    </p>
+
+    <div className="space-y-3">
+      {[
+        ['1','Identificar los tipos de entidad.'],
+        ['2','Identificar los tipos de relaciones.'],
+        ['3','Identificar y asociar los atributos con los tipos de entidad y de relaciones.'],
+        ['4','Determinar los atributos de claves primaria, principal y secundaria.'],
+        ['5','Comprobar si el modelo tiene redundancias.'],
+        ['6','Validar el Modelo Conceptual, comprobando las transacciones de los usuarios.'],
+        ['7','Repasar el Modelo de datos Conceptual con los usuarios.']
+      ].map((x,i)=>
+        <div key={i} className="bg-slate-900 rounded-2xl p-4 border border-orange-500 flex gap-4 items-start">
+          <div className="bg-orange-600 rounded-full w-9 h-9 flex items-center justify-center font-black shrink-0">{x[0]}</div>
+          <p className="text-slate-300">{x[1]}</p>
+        </div>
+      )}
+    </div>
+  </Card>
+
+  <Card className="border-purple-400">
+    <h3 className="text-2xl font-bold text-purple-200 mb-4">📚 Ejemplo guiado: regla del profesor</h3>
+    <p className="text-slate-300 leading-relaxed mb-4">
+      Regla: “Un profesor debe dictar como mínimo una asignatura en el semestre”.
+    </p>
+
+    <div className="grid md:grid-cols-3 gap-4">
+      <div className="bg-slate-900 rounded-2xl p-5 border border-purple-500">
+        <h4 className="font-bold text-purple-300 mb-2">Entidades</h4>
+        <p className="text-slate-300 text-sm">PROFESOR y ASIGNATURA.</p>
+      </div>
+
+      <div className="bg-slate-900 rounded-2xl p-5 border border-purple-500">
+        <h4 className="font-bold text-purple-300 mb-2">Relación</h4>
+        <p className="text-slate-300 text-sm">PROFESOR dicta ASIGNATURA.</p>
+      </div>
+
+      <div className="bg-slate-900 rounded-2xl p-5 border border-purple-500">
+        <h4 className="font-bold text-purple-300 mb-2">Restricción</h4>
+        <p className="text-slate-300 text-sm">Debe dictar mínimo una asignatura.</p>
+      </div>
+    </div>
+
+    <div className="bg-purple-900 bg-opacity-30 border border-purple-500 rounded-2xl p-5 mt-4 text-center font-bold">
+      PROFESOR → dicta → ASIGNATURA
+    </div>
+  </Card>
+
+  <Card className="border-yellow-400">
+    <h3 className="text-2xl font-bold text-yellow-200 mb-4">⚠️ Lo que debes recordar para la prueba</h3>
+
+    <div className="grid md:grid-cols-2 gap-4">
+      <div className="bg-slate-900 rounded-2xl p-5 border border-yellow-500">
+        <h4 className="font-bold text-yellow-300 mb-2">Definición</h4>
+        <p className="text-slate-300 text-sm">Son políticas, normas, operaciones, definiciones y restricciones del negocio.</p>
+      </div>
+
+      <div className="bg-slate-900 rounded-2xl p-5 border border-yellow-500">
+        <h4 className="font-bold text-yellow-300 mb-2">Importancia</h4>
+        <p className="text-slate-300 text-sm">Ayudan a definir entidades, relaciones, atributos y restricciones.</p>
+      </div>
+
+      <div className="bg-slate-900 rounded-2xl p-5 border border-yellow-500">
+        <h4 className="font-bold text-yellow-300 mb-2">Fuentes</h4>
+        <p className="text-slate-300 text-sm">Narrativas del usuario y vistas de usuario.</p>
+      </div>
+
+      <div className="bg-slate-900 rounded-2xl p-5 border border-yellow-500">
+        <h4 className="font-bold text-yellow-300 mb-2">Etapa</h4>
+        <p className="text-slate-300 text-sm">Se trabaja antes de implementar el sistema, dentro del diseño conceptual.</p>
+      </div>
+    </div>
+  </Card>
+
+  <Card className="border-red-400">
+    <h3 className="text-2xl font-bold text-red-200 mb-4">🚨 Pregunta típica de evaluación</h3>
+    <p className="text-slate-300 mb-4">¿Cuál de las siguientes opciones corresponde a una regla del negocio?</p>
+    <div className="space-y-3">
+      <div className="bg-slate-900 rounded-xl p-4 border border-slate-600">A) El color del botón de una aplicación.</div>
+      <div className="bg-emerald-900 bg-opacity-40 rounded-xl p-4 border border-emerald-500">B) Un profesor debe dictar como mínimo una asignatura en el semestre.</div>
+      <div className="bg-slate-900 rounded-xl p-4 border border-slate-600">C) El tipo de letra usado en un informe.</div>
+    </div>
+    <p className="text-emerald-200 mt-4 font-bold">✅ Respuesta correcta: B.</p>
+  </Card>
+
+</div>,
+ mer:<div className="space-y-5">
+
+  <Card className="border-cyan-400">
+    <p className="text-cyan-300 font-bold mb-1">🧩 Según el PDF · Semana 1</p>
+    <h2 className="text-3xl md:text-4xl font-black mb-3">MER</h2>
+    <p className="text-slate-300 leading-relaxed">
+      MER significa Modelo Entidad-Relación. En el PDF este tema incluye entidades, atributos, relaciones, cardinalidad y grado de las relaciones. Por eso queda todo reunido en esta sección.
+    </p>
+  </Card>
+
+  <div className="bg-slate-800 bg-opacity-70 rounded-3xl border border-slate-500 p-3">
+    <div className="flex flex-wrap justify-center gap-2">
+      {[
+        ['intro','📖 Introducción'],
+        ['entidades','🏷️ Entidades'],
+        ['atributos','📝 Atributos'],
+        ['relaciones','🔗 Relaciones'],
+        ['cardinalidad','📊 Cardinalidad'],
+        ['grado','🌐 Grado'],
+        ['caso','🎓 Caso práctico']
+      ].map(x=>
+        <button key={x[0]} data-noaudio="true" onClick={()=>setMerSub(x[0])}
+          className={`px-4 py-2 rounded-xl font-bold text-sm transition ${merSub===x[0]?'bg-indigo-500 shadow-lg':'bg-slate-700 hover:bg-slate-600'}`}>
+          {x[1]}
+        </button>
+      )}
+    </div>
+  </div>
+
+  {merSub==='intro'&&<div className="space-y-5">
+    <Card className="border-indigo-400">
+      <h3 className="text-2xl font-bold text-indigo-200 mb-4">📌 ¿Qué es el MER?</h3>
+      <p className="text-slate-300 leading-relaxed mb-4">
+        El MER es el modelo conceptual más utilizado para el diseño conceptual de bases de datos.
+      </p>
+      <p className="text-slate-300 leading-relaxed">
+        Permite representar de manera simplificada los componentes que participan en un proceso de negocio y la forma en que se relacionan entre sí.
+      </p>
+    </Card>
+
+    <Card className="border-purple-400">
+      <h3 className="text-2xl font-bold text-purple-200 mb-4">🎯 ¿Para qué sirve?</h3>
+      <div className="grid md:grid-cols-3 gap-4 text-center">
+        <div className="bg-slate-900 rounded-2xl p-5 border border-purple-500">
+          <div className="text-5xl mb-3">🔍</div>
+          <h4 className="font-black text-purple-300 mb-2">Analizar</h4>
+          <p className="text-slate-300 text-sm">Ayuda a comprender la realidad del negocio antes de crear tablas.</p>
+        </div>
+        <div className="bg-slate-900 rounded-2xl p-5 border border-purple-500">
+          <div className="text-5xl mb-3">🧩</div>
+          <h4 className="font-black text-purple-300 mb-2">Representar</h4>
+          <p className="text-slate-300 text-sm">Muestra entidades, atributos y relaciones importantes.</p>
+        </div>
+        <div className="bg-slate-900 rounded-2xl p-5 border border-purple-500">
+          <div className="text-5xl mb-3">🗄️</div>
+          <h4 className="font-black text-purple-300 mb-2">Diseñar</h4>
+          <p className="text-slate-300 text-sm">Sirve como base para construir la base de datos.</p>
+        </div>
+      </div>
+    </Card>
+
+    <Card className="border-emerald-400">
+      <h3 className="text-2xl font-bold text-emerald-200 mb-4">🧱 Elementos principales del MER</h3>
+      <div className="grid md:grid-cols-3 gap-4">
+        <div className="bg-slate-900 rounded-2xl p-5 border border-emerald-500">
+          <div className="text-5xl mb-3">🏷️</div>
+          <h4 className="text-xl font-black text-emerald-300 mb-3">Entidad</h4>
+          <p className="text-slate-300 text-sm">Objeto de la realidad del que se necesita mantener y conocer información.</p>
+        </div>
+        <div className="bg-slate-900 rounded-2xl p-5 border border-emerald-500">
+          <div className="text-5xl mb-3">📝</div>
+          <h4 className="text-xl font-black text-emerald-300 mb-3">Atributo</h4>
+          <p className="text-slate-300 text-sm">Propiedad básica que caracteriza a una entidad o a una relación.</p>
+        </div>
+        <div className="bg-slate-900 rounded-2xl p-5 border border-emerald-500">
+          <div className="text-5xl mb-3">🔗</div>
+          <h4 className="text-xl font-black text-emerald-300 mb-3">Relación</h4>
+          <p className="text-slate-300 text-sm">Conexión entre los objetos de una o más entidades.</p>
+        </div>
+      </div>
+    </Card>
+
+
+    <Card className="border-cyan-400">
+      <h3 className="text-2xl font-bold text-cyan-200 mb-4">🖼️ Formas del MER usadas en la guía</h3>
+      <p className="text-slate-300 leading-relaxed mb-4">
+        Para estudiar el MER, puedes asociar cada concepto con una forma visual. Esto ayuda a reconocer rápidamente qué representa cada elemento en un diagrama.
+      </p>
+      <div data-audio-skip="true" className="svgbox">
+        <svg viewBox="0 0 900 300" width="100%" height="300" role="img" aria-label="Formas visuales del Modelo Entidad Relación">
+          <defs>
+            <marker id="arrowMerFig" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+              <path d="M0,0 L0,6 L9,3 z" fill="#38bdf8" />
+            </marker>
+          </defs>
+
+          <rect x="60" y="55" width="190" height="90" rx="18" fill="#1e293b" stroke="#34d399" strokeWidth="4"/>
+          <text x="155" y="93" textAnchor="middle" fill="#d1fae5" fontSize="24">🏷️</text>
+          <text x="155" y="124" textAnchor="middle" fill="#ffffff" fontSize="20" fontWeight="900">ENTIDAD</text>
+          <text x="155" y="178" textAnchor="middle" fill="#a7f3d0" fontSize="15" fontWeight="700">Caja redondeada</text>
+
+          <ellipse cx="450" cy="100" rx="105" ry="48" fill="#451a03" stroke="#f59e0b" strokeWidth="4"/>
+          <text x="450" y="94" textAnchor="middle" fill="#fef3c7" fontSize="22">📝</text>
+          <text x="450" y="122" textAnchor="middle" fill="#ffffff" fontSize="18" fontWeight="900">atributo</text>
+          <text x="450" y="178" textAnchor="middle" fill="#fde68a" fontSize="15" fontWeight="700">Óvalo / dato descriptivo</text>
+
+          <polygon points="720,45 845,100 720,155 595,100" fill="#312e81" stroke="#a78bfa" strokeWidth="4"/>
+          <text x="720" y="95" textAnchor="middle" fill="#ede9fe" fontSize="22">🔗</text>
+          <text x="720" y="123" textAnchor="middle" fill="#ffffff" fontSize="18" fontWeight="900">RELACIÓN</text>
+          <text x="720" y="178" textAnchor="middle" fill="#ddd6fe" fontSize="15" fontWeight="700">Rombo / conexión</text>
+
+          <line x1="255" y1="100" x2="340" y2="100" stroke="#38bdf8" strokeWidth="4" markerEnd="url(#arrowMerFig)" />
+          <line x1="555" y1="100" x2="595" y2="100" stroke="#38bdf8" strokeWidth="4" markerEnd="url(#arrowMerFig)" />
+
+          <text x="450" y="245" textAnchor="middle" fill="#e0f2fe" fontSize="18" fontWeight="800">
+            Entidad + Atributos + Relaciones = MER
+          </text>
+        </svg>
+      </div>
+    </Card>
+
+    <Card className="border-orange-400">
+      <h3 className="text-2xl font-bold text-orange-200 mb-4">📌 MER original y MER extendido</h3>
+      <div className="grid md:grid-cols-2 gap-4">
+        <div className="bg-slate-900 rounded-2xl p-5 border border-orange-500">
+          <h4 className="font-bold text-orange-300 mb-3">MER original</h4>
+          <ul className="text-slate-300 text-sm space-y-2">
+            <li>• Entidades.</li>
+            <li>• Atributos.</li>
+            <li>• Relaciones.</li>
+          </ul>
+        </div>
+        <div className="bg-slate-900 rounded-2xl p-5 border border-orange-500">
+          <h4 className="font-bold text-orange-300 mb-3">MER extendido</h4>
+          <ul className="text-slate-300 text-sm space-y-2">
+            <li>• Atributos compuestos.</li>
+            <li>• Jerarquías de generalización.</li>
+            <li>• Otros conceptos agregados al modelo básico.</li>
+          </ul>
+        </div>
+      </div>
+    </Card>
+  </div>}
+
+  {merSub==='entidades'&&<div className="space-y-5">
+    <Card className="border-indigo-400">
+      <h3 className="text-2xl font-bold text-indigo-200 mb-4">🏷️ ¿Qué son las entidades?</h3>
+      <p className="text-slate-300 leading-relaxed mb-4">
+        Una entidad es cualquier objeto, real o abstracto, que existe en un contexto determinado o puede llegar a existir, y del cual se desea guardar información.
+      </p>
+      <div className="bg-indigo-900 bg-opacity-30 border border-indigo-500 rounded-2xl p-5">
+        <p className="text-slate-300">
+          Las entidades contienen hechos que la empresa debe conocer y recordar. Normalmente corresponden a sustantivos importantes de la narrativa del negocio.
+        </p>
+      </div>
+    </Card>
+
+    <Card className="border-blue-400">
+      <h3 className="text-2xl font-bold text-blue-200 mb-4">📚 Tipos de entidades</h3>
+      <div className="grid md:grid-cols-2 gap-4">
+        {[
+          ['👤 Persona','Sujeto que interviene o efectúa un evento determinado en el negocio.','CLIENTE, PROFESOR, EMPLEADO, ALUMNO'],
+          ['📘 Concepto','Término empleado para clasificar, calificar o medir otra entidad.','TIPO_CLIENTE, TIPO_CUENTA'],
+          ['⚙️ Evento','Acciones efectuadas por las personas y que afectan a los objetos.','PEDIDO, COMPRA, RECLAMO'],
+          ['📦 Objeto/Cosa','Entes tangibles sobre los que se desea guardar información.','PRODUCTO, LIBRO, VEHICULO'],
+          ['📍 Lugar','Ubicación de objetos y personas.','CIUDAD, PAIS, BODEGA'],
+          ['🏢 Organización','Estructura de una organización.','DEPARTAMENTO, SUCURSAL']
+        ].map((x,i)=><div key={i} className="bg-slate-900 rounded-2xl p-5 border border-blue-500">
+          <h4 className="font-bold text-blue-300 mb-2">{x[0]}</h4>
+          <p className="text-slate-300 text-sm mb-2">{x[1]}</p>
+          <p className="text-blue-100 text-sm font-bold">{x[2]}</p>
+        </div>)}
+      </div>
+    </Card>
+
+    <Card className="border-orange-400">
+      <h3 className="text-2xl font-bold text-orange-200 mb-4">🧩 Clasificación de entidades</h3>
+      <div className="grid md:grid-cols-3 gap-4">
+        <div className="bg-slate-900 rounded-2xl p-5 border border-orange-500">
+          <h4 className="font-bold text-orange-300 mb-3">Entidad principal o fuerte</h4>
+          <p className="text-slate-300 text-sm mb-3">Es independiente y no depende de la existencia de otra entidad.</p>
+          <p className="text-orange-100 text-sm font-bold">Ejemplos: CLIENTE, PROFESOR, EMPLEADO, ALUMNO, DEPARTAMENTO.</p>
+        </div>
+        <div className="bg-slate-900 rounded-2xl p-5 border border-orange-500">
+          <h4 className="font-bold text-orange-300 mb-3">Entidad característica o débil</h4>
+          <p className="text-slate-300 text-sm mb-3">Depende de la existencia de una entidad fuerte.</p>
+          <p className="text-orange-100 text-sm font-bold">Ejemplos: NOTA depende de ALUMNO; CARGA_FAMILIAR depende de EMPLEADO.</p>
+        </div>
+        <div className="bg-slate-900 rounded-2xl p-5 border border-orange-500">
+          <h4 className="font-bold text-orange-300 mb-3">Entidad intersección</h4>
+          <p className="text-slate-300 text-sm mb-3">Depende de la existencia de dos o más entidades.</p>
+          <p className="text-orange-100 text-sm font-bold">Ejemplo: DETALLE_FACTURA depende de FACTURA y PRODUCTO.</p>
+        </div>
+      </div>
+    </Card>
+
+    <Card className="border-cyan-400">
+      <h3 className="text-2xl font-bold text-cyan-200 mb-4">🛠️ Identificando entidades</h3>
+      <div className="space-y-3">
+        {[
+          'Examinar los sustantivos presentes en la narrativa.',
+          'Preguntar si son cosas importantes para considerarlas como entidades.',
+          'Verificar si hay información de interés que se deba almacenar.',
+          'Confirmar si cada instancia de esa entidad es identificable.',
+          'Elaborar una descripción de cada entidad.',
+          'Dibujar la entidad y colocar sus atributos.'
+        ].map((x,i)=><div key={i} className="bg-slate-900 rounded-2xl p-4 border border-cyan-500 flex gap-4 items-start">
+          <div className="bg-cyan-600 rounded-full w-9 h-9 flex items-center justify-center font-black shrink-0">{i+1}</div>
+          <p className="text-slate-300">{x}</p>
+        </div>)}
+      </div>
+    </Card>
+
+    <Card className="border-emerald-400">
+      <h3 className="text-2xl font-bold text-emerald-200 mb-4">✏️ Convenciones CASE*METHOD</h3>
+      <div className="grid md:grid-cols-3 gap-4">
+        <div className="bg-slate-900 rounded-2xl p-5 border border-emerald-500"><b className="text-emerald-300">Forma</b><p className="text-slate-300 text-sm mt-2">Cajas con bordes redondeados.</p></div>
+        <div className="bg-slate-900 rounded-2xl p-5 border border-emerald-500"><b className="text-emerald-300">Nombre único</b><p className="text-slate-300 text-sm mt-2">Cada entidad lleva un nombre único.</p></div>
+        <div className="bg-slate-900 rounded-2xl p-5 border border-emerald-500"><b className="text-emerald-300">Mayúscula y singular</b><p className="text-slate-300 text-sm mt-2">Ejemplo: EMPLEADO.</p></div>
+      </div>
+    </Card>
+  </div>}
+
+
+    <Card className="border-sky-400">
+      <h3 className="text-2xl font-bold text-sky-200 mb-4">📦 Ejemplo visual de entidades</h3>
+      <p className="text-slate-300 leading-relaxed mb-4">
+        En la simbología tipo CASE*METHOD, las entidades se representan con cajas redondeadas, usando nombres en mayúscula y singular.
+      </p>
+      <div data-audio-skip="true" className="svgbox">
+        <svg viewBox="0 0 900 260" width="100%" height="260" role="img" aria-label="Ejemplo visual de entidades">
+          <rect x="70" y="70" width="210" height="95" rx="18" fill="#7dd3fc" stroke="#2563eb" strokeWidth="4"/>
+          <text x="175" y="125" textAnchor="middle" fill="#1e3a8a" fontWeight="900" fontSize="24">EMPLEADO</text>
+
+          <rect x="345" y="70" width="210" height="95" rx="18" fill="#7dd3fc" stroke="#2563eb" strokeWidth="4"/>
+          <text x="450" y="125" textAnchor="middle" fill="#1e3a8a" fontWeight="900" fontSize="24">CLIENTE</text>
+
+          <rect x="620" y="70" width="210" height="95" rx="18" fill="#7dd3fc" stroke="#2563eb" strokeWidth="4"/>
+          <text x="725" y="125" textAnchor="middle" fill="#1e3a8a" fontWeight="900" fontSize="24">PRODUCTO</text>
+
+          <text x="450" y="210" textAnchor="middle" fill="#e0f2fe" fontSize="16" fontWeight="800">
+            Nombre único · Mayúscula · Singular
+          </text>
+        </svg>
+      </div>
+    </Card>
+
+
+  {merSub==='atributos'&&<div className="space-y-5">
+    <Card className="border-indigo-400">
+      <h3 className="text-2xl font-bold text-indigo-200 mb-4">📝 ¿Qué son los atributos?</h3>
+      <p className="text-slate-300 leading-relaxed mb-4">
+        Los atributos son información que necesita ser conocida y mantenida de una entidad. También son propiedades o valores asociados a una entidad o relación.
+      </p>
+      <div className="bg-indigo-900 bg-opacity-30 border border-indigo-500 rounded-2xl p-5">
+        <p className="text-slate-300">Sirven para cualificar, identificar, clasificar o expresar el estado de la entidad.</p>
+      </div>
+    </Card>
+
+    <Card className="border-blue-400">
+      <h3 className="text-2xl font-bold text-blue-200 mb-4">📌 Dominio e UID</h3>
+      <div className="grid md:grid-cols-2 gap-4">
+        <div className="bg-slate-900 rounded-2xl p-5 border border-blue-500">
+          <h4 className="font-bold text-blue-300 mb-2">Dominio</h4>
+          <p className="text-slate-300 text-sm">Conjunto de valores posibles para un atributo. En la práctica considera tipo de campo y largo del campo.</p>
+        </div>
+        <div className="bg-slate-900 rounded-2xl p-5 border border-blue-500">
+          <h4 className="font-bold text-blue-300 mb-2">UID / IDU</h4>
+          <p className="text-slate-300 text-sm">Atributo o conjunto de atributos que identifican particularmente a cada instancia.</p>
+        </div>
+      </div>
+    </Card>
+
+    <Card className="border-purple-400">
+      <h3 className="text-2xl font-bold text-purple-200 mb-4">🧩 Clasificación de atributos</h3>
+      <div className="grid md:grid-cols-2 gap-4">
+        {[
+          ['Obligatorio','Siempre se debe conocer su valor. Se indica con * al lado del atributo.'],
+          ['Opcional','No todas las instancias deben tener un valor. Se indica con o.'],
+          ['Simple','Tiene un solo componente y no se divide en partes con significado propio. Ejemplo: edad.'],
+          ['Compuesto','Tiene varios componentes con significado propio. Ejemplo: dirección: calle, número, comuna, ciudad.'],
+          ['Monovalorado','Tiene un solo valor para cada ocurrencia. Ejemplo: rut.'],
+          ['Multivalorado','Tiene varios valores para una ocurrencia. Ejemplo: teléfonos, títulos o notas.'],
+          ['Derivado','Se obtiene a partir de uno o varios atributos. Ejemplo: promedio calculado desde notas.']
+        ].map((x,i)=><div key={i} className="bg-slate-900 rounded-2xl p-5 border border-purple-500">
+          <h4 className="font-bold text-purple-300 mb-2">{x[0]}</h4>
+          <p className="text-slate-300 text-sm">{x[1]}</p>
+        </div>)}
+      </div>
+    </Card>
+
+
+    <Card className="border-amber-400">
+      <h3 className="text-2xl font-bold text-amber-200 mb-4">🖼️ Formas para entender atributos</h3>
+      <p className="text-slate-300 leading-relaxed mb-4">
+        El PDF diferencia atributos simples, compuestos, multivalorados y derivados. Visualmente se pueden estudiar así:
+      </p>
+      <div data-audio-skip="true" className="svgbox">
+        <svg viewBox="0 0 940 360" width="100%" height="360" role="img" aria-label="Formas de atributos simples compuestos multivalorados y derivados">
+          <ellipse cx="145" cy="95" rx="95" ry="42" fill="#451a03" stroke="#f59e0b" strokeWidth="4"/>
+          <text x="145" y="102" textAnchor="middle" fill="#ffffff" fontSize="18" fontWeight="900">edad</text>
+          <text x="145" y="158" textAnchor="middle" fill="#fde68a" fontSize="15" fontWeight="800">Simple</text>
+
+          <ellipse cx="390" cy="95" rx="105" ry="42" fill="#451a03" stroke="#f59e0b" strokeWidth="4"/>
+          <text x="390" y="102" textAnchor="middle" fill="#ffffff" fontSize="18" fontWeight="900">dirección</text>
+          <ellipse cx="300" cy="210" rx="62" ry="30" fill="#1e293b" stroke="#fbbf24" strokeWidth="3"/>
+          <text x="300" y="216" textAnchor="middle" fill="#fef3c7" fontSize="14" fontWeight="800">calle</text>
+          <ellipse cx="390" cy="210" rx="62" ry="30" fill="#1e293b" stroke="#fbbf24" strokeWidth="3"/>
+          <text x="390" y="216" textAnchor="middle" fill="#fef3c7" fontSize="14" fontWeight="800">número</text>
+          <ellipse cx="480" cy="210" rx="62" ry="30" fill="#1e293b" stroke="#fbbf24" strokeWidth="3"/>
+          <text x="480" y="216" textAnchor="middle" fill="#fef3c7" fontSize="14" fontWeight="800">comuna</text>
+          <line x1="360" y1="130" x2="315" y2="182" stroke="#fbbf24" strokeWidth="3"/>
+          <line x1="390" y1="137" x2="390" y2="180" stroke="#fbbf24" strokeWidth="3"/>
+          <line x1="420" y1="130" x2="465" y2="182" stroke="#fbbf24" strokeWidth="3"/>
+          <text x="390" y="288" textAnchor="middle" fill="#fde68a" fontSize="15" fontWeight="800">Compuesto</text>
+
+          <ellipse cx="665" cy="95" rx="95" ry="42" fill="#451a03" stroke="#f59e0b" strokeWidth="4"/>
+          <ellipse cx="665" cy="95" rx="112" ry="55" fill="none" stroke="#fbbf24" strokeWidth="3"/>
+          <text x="665" y="102" textAnchor="middle" fill="#ffffff" fontSize="18" fontWeight="900">teléfono</text>
+          <text x="665" y="158" textAnchor="middle" fill="#fde68a" fontSize="15" fontWeight="800">Multivalorado</text>
+
+          <ellipse cx="830" cy="95" rx="92" ry="40" fill="#0f172a" stroke="#c084fc" strokeWidth="4" strokeDasharray="8 7"/>
+          <text x="830" y="102" textAnchor="middle" fill="#ffffff" fontSize="18" fontWeight="900">promedio</text>
+          <text x="830" y="158" textAnchor="middle" fill="#ddd6fe" fontSize="15" fontWeight="800">Derivado</text>
+
+          <text x="470" y="335" textAnchor="middle" fill="#e0f2fe" fontSize="16" fontWeight="800">
+            Atributo simple · compuesto · multivalorado · derivado
+          </text>
+        </svg>
+      </div>
+    </Card>
+
+    <Card className="border-orange-400">
+      <h3 className="text-2xl font-bold text-orange-200 mb-4">✏️ Convenciones para atributos</h3>
+      <ul className="text-slate-300 space-y-2">
+        <li>• Se escriben en singular y en minúsculas.</li>
+        <li>• Se descomponen cuando sea necesario.</li>
+        <li>• Las fechas no se descomponen, aunque dependerá de las necesidades de la organización.</li>
+        <li>• Se debe verificar que el atributo tenga un solo valor para cada instancia de la entidad.</li>
+      </ul>
+    </Card>
+
+    <Card className="border-yellow-400">
+      <h3 className="text-2xl font-bold text-yellow-200 mb-4">📚 Ejemplo: EMPLEADO</h3>
+      <div className="bg-slate-900 rounded-2xl p-5 border border-yellow-500">
+        <p className="text-slate-300"><b>EMPLEADO</b></p>
+        <p className="text-slate-300"># codigo</p>
+        <p className="text-slate-300">* nombre</p>
+        <p className="text-slate-300">* direccion</p>
+        <p className="text-slate-300">o telefono</p>
+      </div>
+      <p className="text-slate-300 text-sm mt-4"># identifica el UID, * indica obligatorio y o indica opcional.</p>
+    </Card>
+  </div>}
+
+  {merSub==='relaciones'&&<div className="space-y-5">
+    <Card className="border-indigo-400">
+      <h3 className="text-2xl font-bold text-indigo-200 mb-4">🔗 ¿Qué es una relación?</h3>
+      <p className="text-slate-300 leading-relaxed mb-4">
+        Una relación es una asociación bidireccional y significativa entre entidades, o entre una entidad y ella misma.
+      </p>
+      <div className="bg-indigo-900 bg-opacity-30 border border-indigo-500 rounded-2xl p-5">
+        <p className="text-slate-300">Representa reglas de negocio que unen a las entidades.</p>
+      </div>
+    </Card>
+
+    <Card className="border-blue-400">
+      <h3 className="text-2xl font-bold text-blue-200 mb-4">📌 Ejemplo Departamento / Empleado</h3>
+      <div className="grid md:grid-cols-2 gap-4">
+        <div className="bg-slate-900 rounded-2xl p-5 border border-blue-500">
+          <h4 className="font-bold text-blue-300 mb-3">Regla 1</h4>
+          <p className="text-slate-300">Un departamento puede estar formado por uno o muchos empleados.</p>
+        </div>
+        <div className="bg-slate-900 rounded-2xl p-5 border border-blue-500">
+          <h4 className="font-bold text-blue-300 mb-3">Regla 2</h4>
+          <p className="text-slate-300">Un empleado pertenece a uno y solo un departamento.</p>
+        </div>
+      </div>
+    </Card>
+
+    <Card className="border-emerald-400">
+      <h3 className="text-2xl font-bold text-emerald-200 mb-4">🧠 Lectura en ambos sentidos</h3>
+      <div className="grid md:grid-cols-2 gap-4">
+        <div className="bg-slate-900 rounded-2xl p-5 border border-emerald-500 text-center font-bold">
+          DEPARTAMENTO<br/><span className="text-emerald-300">está formado por</span><br/>EMPLEADO
+        </div>
+        <div className="bg-slate-900 rounded-2xl p-5 border border-emerald-500 text-center font-bold">
+          EMPLEADO<br/><span className="text-emerald-300">pertenece a</span><br/>DEPARTAMENTO
+        </div>
+      </div>
+    </Card>
+  </div>}
+
+
+    <Card className="border-violet-400">
+      <h3 className="text-2xl font-bold text-violet-200 mb-4">🖼️ Relación con forma de rombo</h3>
+      <p className="text-slate-300 leading-relaxed mb-4">
+        En los diagramas clásicos, la relación se puede representar como un rombo entre dos entidades.
+      </p>
+      <div data-audio-skip="true" className="svgbox">
+        <svg viewBox="0 0 900 260" width="100%" height="260" role="img" aria-label="Relación con forma de rombo">
+          <rect x="70" y="75" width="190" height="90" rx="18" fill="#1e293b" stroke="#38bdf8" strokeWidth="4"/>
+          <text x="165" y="128" textAnchor="middle" fill="#ffffff" fontSize="22" fontWeight="900">CLIENTE</text>
+
+          <polygon points="450,55 555,120 450,185 345,120" fill="#312e81" stroke="#a78bfa" strokeWidth="4"/>
+          <text x="450" y="128" textAnchor="middle" fill="#ffffff" fontSize="20" fontWeight="900">COMPRA</text>
+
+          <rect x="640" y="75" width="190" height="90" rx="18" fill="#1e293b" stroke="#34d399" strokeWidth="4"/>
+          <text x="735" y="128" textAnchor="middle" fill="#ffffff" fontSize="22" fontWeight="900">PRODUCTO</text>
+
+          <line x1="260" y1="120" x2="345" y2="120" stroke="#f59e0b" strokeWidth="4"/>
+          <line x1="555" y1="120" x2="640" y2="120" stroke="#f59e0b" strokeWidth="4"/>
+
+          <text x="450" y="225" textAnchor="middle" fill="#e0f2fe" fontSize="16" fontWeight="800">
+            CLIENTE realiza COMPRA de PRODUCTO
+          </text>
+        </svg>
+      </div>
+    </Card>
+
+
+  {merSub==='cardinalidad'&&<div className="space-y-5">
+    <Card className="border-cyan-400">
+      <h3 className="text-2xl font-bold text-cyan-200 mb-4">📊 ¿Qué es cardinalidad?</h3>
+      <p className="text-slate-300 leading-relaxed mb-4">
+        La cardinalidad expresa el número de entidades con las que puede asociarse otra entidad mediante una relación.
+      </p>
+      <p className="text-slate-300 leading-relaxed">Indica el número mínimo y máximo de correspondencias en las que puede participar cada entidad.</p>
+    </Card>
+
+    <Card className="border-blue-400">
+      <h3 className="text-2xl font-bold text-blue-200 mb-4">1:M o M:1</h3>
+      <p className="text-slate-300 mb-4">Uno a muchos o muchos a uno. Es la relación más frecuente.</p>
+      <div className="bg-slate-900 rounded-2xl p-5 border border-blue-500 text-center font-bold">
+        DEPARTAMENTO<br/><span className="text-blue-300">tiene</span><br/>EMPLEADO
+      </div>
+      <p className="text-slate-300 text-sm mt-4">Un departamento puede tener muchos empleados; un empleado pertenece a un solo departamento.</p>
+    </Card>
+
+    <Card className="border-purple-400">
+      <h3 className="text-2xl font-bold text-purple-200 mb-4">M:M</h3>
+      <p className="text-slate-300 mb-4">Muchos a muchos. Tiene cardinalidad de uno o más en ambas direcciones.</p>
+      <div className="bg-slate-900 rounded-2xl p-5 border border-purple-500 text-center font-bold">
+        ALUMNO<br/><span className="text-purple-300">cursa</span><br/>ASIGNATURA
+      </div>
+      <p className="text-slate-300 text-sm mt-4">Un alumno puede cursar muchas asignaturas y una asignatura puede tener muchos alumnos.</p>
+    </Card>
+
+    <Card className="border-orange-400">
+      <h3 className="text-2xl font-bold text-orange-200 mb-4">1:1</h3>
+      <p className="text-slate-300 mb-4">Uno a uno. Son las menos comunes y se deben revisar con cuidado.</p>
+      <div className="bg-slate-900 rounded-2xl p-5 border border-orange-500 text-center font-bold">
+        EMPLEADO<br/><span className="text-orange-300">ocupa</span><br/>PUESTO_DE_TRABAJO
+      </div>
+      <p className="text-slate-300 text-sm mt-4">A veces una relación 1:1 puede indicar que realmente se trata de una sola entidad.</p>
+    </Card>
+  </div>}
+
+
+    <Card className="border-pink-400">
+      <h3 className="text-2xl font-bold text-pink-200 mb-4">📐 Diagrama comparativo de cardinalidad</h3>
+      <div data-audio-skip="true" className="svgbox">
+        <svg viewBox="0 0 940 430" width="100%" height="430" role="img" aria-label="Diagramas cardinalidades 1 a muchos muchos a muchos y uno a uno">
+          <text x="470" y="35" textAnchor="middle" fill="#e0f2fe" fontSize="24" fontWeight="900">Cardinalidades principales</text>
+
+          <rect x="55" y="80" width="170" height="70" rx="16" fill="#1e293b" stroke="#38bdf8" strokeWidth="3"/>
+          <text x="140" y="122" textAnchor="middle" fill="#fff" fontWeight="900">DEPARTAMENTO</text>
+          <rect x="365" y="80" width="170" height="70" rx="16" fill="#1e293b" stroke="#38bdf8" strokeWidth="3"/>
+          <text x="450" y="122" textAnchor="middle" fill="#fff" fontWeight="900">EMPLEADO</text>
+          <line x1="225" y1="115" x2="365" y2="115" stroke="#fbbf24" strokeWidth="4"/>
+          <text x="245" y="100" fill="#fde68a" fontWeight="900">1</text>
+          <text x="335" y="100" fill="#fde68a" fontWeight="900">M</text>
+          <text x="295" y="150" textAnchor="middle" fill="#fde68a" fontSize="15" fontWeight="800">1:M</text>
+
+          <rect x="55" y="205" width="170" height="70" rx="16" fill="#1e293b" stroke="#a78bfa" strokeWidth="3"/>
+          <text x="140" y="247" textAnchor="middle" fill="#fff" fontWeight="900">ALUMNO</text>
+          <rect x="365" y="205" width="170" height="70" rx="16" fill="#1e293b" stroke="#a78bfa" strokeWidth="3"/>
+          <text x="450" y="247" textAnchor="middle" fill="#fff" fontWeight="900">ASIGNATURA</text>
+          <line x1="225" y1="240" x2="365" y2="240" stroke="#c084fc" strokeWidth="4"/>
+          <text x="245" y="225" fill="#ddd6fe" fontWeight="900">M</text>
+          <text x="335" y="225" fill="#ddd6fe" fontWeight="900">M</text>
+          <text x="295" y="275" textAnchor="middle" fill="#ddd6fe" fontSize="15" fontWeight="800">M:M</text>
+
+          <rect x="55" y="330" width="170" height="70" rx="16" fill="#1e293b" stroke="#fb923c" strokeWidth="3"/>
+          <text x="140" y="372" textAnchor="middle" fill="#fff" fontWeight="900">EMPLEADO</text>
+          <rect x="365" y="330" width="190" height="70" rx="16" fill="#1e293b" stroke="#fb923c" strokeWidth="3"/>
+          <text x="460" y="372" textAnchor="middle" fill="#fff" fontWeight="900">PUESTO</text>
+          <line x1="225" y1="365" x2="365" y2="365" stroke="#fdba74" strokeWidth="4"/>
+          <text x="245" y="350" fill="#fed7aa" fontWeight="900">1</text>
+          <text x="335" y="350" fill="#fed7aa" fontWeight="900">1</text>
+          <text x="295" y="400" textAnchor="middle" fill="#fed7aa" fontSize="15" fontWeight="800">1:1</text>
+
+          <text x="720" y="130" textAnchor="middle" fill="#bae6fd" fontSize="15" fontWeight="800">Un departamento tiene muchos empleados.</text>
+          <text x="720" y="255" textAnchor="middle" fill="#ddd6fe" fontSize="15" fontWeight="800">Muchos alumnos cursan muchas asignaturas.</text>
+          <text x="720" y="380" textAnchor="middle" fill="#fed7aa" fontSize="15" fontWeight="800">Un empleado ocupa un puesto.</text>
+        </svg>
+      </div>
+    </Card>
+
+
+  {merSub==='grado'&&<div className="space-y-5">
+    <Card className="border-cyan-400">
+      <h3 className="text-2xl font-bold text-cyan-200 mb-4">🌐 Grado de las relaciones</h3>
+      <p className="text-slate-300 leading-relaxed">
+        La cantidad de entidades que participan en una relación determina el grado de la relación.
+      </p>
+    </Card>
+
+    <div className="grid md:grid-cols-3 gap-4">
+      <Card className="border-blue-400">
+        <h3 className="text-2xl font-bold text-blue-200 mb-3">Unaria</h3>
+        <p className="text-slate-300 text-sm mb-4">Relación entre ocurrencias de una misma entidad. También se llama recursiva.</p>
+        <div className="bg-slate-900 rounded-xl p-4 text-center font-bold">EMPLEADO<br/><span className="text-blue-300">supervisa a</span><br/>EMPLEADO</div>
+      </Card>
+
+      <Card className="border-emerald-400">
+        <h3 className="text-2xl font-bold text-emerald-200 mb-3">Binaria</h3>
+        <p className="text-slate-300 text-sm mb-4">Relación entre dos clases de entidades.</p>
+        <div className="bg-slate-900 rounded-xl p-4 text-center font-bold">DEPARTAMENTO<br/><span className="text-emerald-300">tiene</span><br/>EMPLEADO</div>
+      </Card>
+
+      <Card className="border-purple-400">
+        <h3 className="text-2xl font-bold text-purple-200 mb-3">Ternaria / N-aria</h3>
+        <p className="text-slate-300 text-sm mb-4">Relación entre tres o más entidades.</p>
+        <div className="bg-slate-900 rounded-xl p-4 text-center font-bold">PROFESOR<br/>ASIGNATURA<br/>SALA</div>
+      </Card>
+    </div>
+  </div>}
+
+
+    <Card className="border-teal-400">
+      <h3 className="text-2xl font-bold text-teal-200 mb-4">🖼️ Formas según el grado de la relación</h3>
+      <div data-audio-skip="true" className="svgbox">
+        <svg viewBox="0 0 940 360" width="100%" height="360" role="img" aria-label="Grado de relaciones unaria binaria ternaria">
+          <text x="470" y="35" textAnchor="middle" fill="#e0f2fe" fontSize="24" fontWeight="900">Grado de las relaciones</text>
+
+          <rect x="55" y="80" width="180" height="70" rx="16" fill="#1e293b" stroke="#38bdf8" strokeWidth="3"/>
+          <text x="145" y="122" textAnchor="middle" fill="#fff" fontWeight="900">EMPLEADO</text>
+          <path d="M145 80 C80 35 35 125 55 150" stroke="#38bdf8" strokeWidth="4" fill="none"/>
+          <text x="145" y="190" textAnchor="middle" fill="#bae6fd" fontWeight="900">Unaria / recursiva</text>
+
+          <rect x="335" y="80" width="155" height="70" rx="16" fill="#1e293b" stroke="#34d399" strokeWidth="3"/>
+          <text x="412" y="122" textAnchor="middle" fill="#fff" fontWeight="900">CLIENTE</text>
+          <rect x="595" y="80" width="155" height="70" rx="16" fill="#1e293b" stroke="#34d399" strokeWidth="3"/>
+          <text x="672" y="122" textAnchor="middle" fill="#fff" fontWeight="900">COMPRA</text>
+          <line x1="490" y1="115" x2="595" y2="115" stroke="#34d399" strokeWidth="4"/>
+          <text x="542" y="190" textAnchor="middle" fill="#a7f3d0" fontWeight="900">Binaria</text>
+
+          <rect x="240" y="245" width="145" height="65" rx="16" fill="#1e293b" stroke="#c084fc" strokeWidth="3"/>
+          <text x="312" y="284" textAnchor="middle" fill="#fff" fontWeight="900">PROFESOR</text>
+          <rect x="415" y="245" width="145" height="65" rx="16" fill="#1e293b" stroke="#c084fc" strokeWidth="3"/>
+          <text x="487" y="284" textAnchor="middle" fill="#fff" fontWeight="900">ASIGNATURA</text>
+          <rect x="590" y="245" width="145" height="65" rx="16" fill="#1e293b" stroke="#c084fc" strokeWidth="3"/>
+          <text x="662" y="284" textAnchor="middle" fill="#fff" fontWeight="900">SALA</text>
+          <line x1="385" y1="278" x2="415" y2="278" stroke="#c084fc" strokeWidth="4"/>
+          <line x1="560" y1="278" x2="590" y2="278" stroke="#c084fc" strokeWidth="4"/>
+          <text x="487" y="335" textAnchor="middle" fill="#ddd6fe" fontWeight="900">Ternaria / N-aria</text>
+        </svg>
+      </div>
+    </Card>
+
+
+  {merSub==='caso'&&<div className="space-y-5">
+    <Card className="border-purple-400">
+      <p className="text-purple-300 font-bold mb-1">🎓 Caso práctico</p>
+      <h3 className="text-2xl font-bold text-purple-200 mb-4">Empleado y puesto de trabajo</h3>
+      <p className="text-slate-300 leading-relaxed mb-4">
+        Cuando se contrata un empleado, se requiere saber su nombre, dirección y teléfono. Además se le asigna un código que lo identifica. Un empleado ocupa un solo puesto de trabajo y ese puesto es ocupado por un solo empleado o por ninguno si está vacante.
+      </p>
+    </Card>
+
+    <div className="grid md:grid-cols-2 gap-4">
+      <Card className="border-blue-400">
+        <h3 className="text-xl font-bold text-blue-200 mb-3">Entidad: EMPLEADO</h3>
+        <ul className="text-slate-300 text-sm space-y-1">
+          <li>• codigo</li>
+          <li>• nombre</li>
+          <li>• direccion</li>
+          <li>• telefono</li>
+        </ul>
+      </Card>
+
+      <Card className="border-emerald-400">
+        <h3 className="text-xl font-bold text-emerald-200 mb-3">Entidad: PUESTO_DE_TRABAJO</h3>
+        <ul className="text-slate-300 text-sm space-y-1">
+          <li>• codigo</li>
+          <li>• departamento</li>
+          <li>• descripcion</li>
+        </ul>
+      </Card>
+    </div>
+
+    <Card className="border-cyan-400">
+      <h3 className="text-2xl font-bold text-cyan-200 mb-4">Relación y cardinalidad</h3>
+      <div className="bg-slate-900 rounded-2xl p-5 border border-cyan-500 text-center text-lg font-bold">
+        EMPLEADO<br/>
+        <span className="text-cyan-300">ocupa</span><br/>
+        PUESTO_DE_TRABAJO
+      </div>
+      <p className="text-slate-300 mt-4">
+        La relación es 1:1: un empleado ocupa un solo puesto, y un puesto puede estar ocupado por un solo empleado o por ninguno si está vacante.
+      </p>
+    </Card>
+  </div>}
+
+</div>,
+ entidades:<div className="space-y-5">
+
+  <Card className="border-cyan-400">
+    <p className="text-cyan-300 font-bold mb-1">🏷️ Según el PDF · Semana 1</p>
+    <h2 className="text-3xl md:text-4xl font-black mb-3">Entidades</h2>
+    <p className="text-slate-300 leading-relaxed">
+      En el Modelo Entidad-Relación, las entidades representan objetos de la realidad sobre los que la organización necesita guardar información.
+    </p>
+  </Card>
+
+  <Card className="border-indigo-400">
+    <h3 className="text-2xl font-bold text-indigo-200 mb-4">📌 ¿Qué es una entidad?</h3>
+    <p className="text-slate-300 leading-relaxed mb-4">
+      Según el PDF, una entidad representa un objeto de la realidad del que se necesita mantener y conocer información.
+    </p>
+
+    <div className="grid md:grid-cols-3 gap-4">
+      <div className="bg-slate-900 rounded-2xl p-5 border border-indigo-500">
+        <h4 className="font-bold text-indigo-300 mb-2">Existe en un contexto</h4>
+        <p className="text-slate-300 text-sm">Puede ser algo real o abstracto que existe o puede llegar a existir.</p>
+      </div>
+
+      <div className="bg-slate-900 rounded-2xl p-5 border border-indigo-500">
+        <h4 className="font-bold text-indigo-300 mb-2">Importa al negocio</h4>
+        <p className="text-slate-300 text-sm">Debe ser relevante para la organización o proceso que se está modelando.</p>
+      </div>
+
+      <div className="bg-slate-900 rounded-2xl p-5 border border-indigo-500">
+        <h4 className="font-bold text-indigo-300 mb-2">Guarda datos</h4>
+        <p className="text-slate-300 text-sm">Sobre ella se necesita almacenar información.</p>
+      </div>
+    </div>
+  </Card>
+
+  <Card className="border-emerald-400">
+    <h3 className="text-2xl font-bold text-emerald-200 mb-4">🧠 Idea clave del PDF</h3>
+    <p className="text-slate-300 leading-relaxed mb-4">
+      Las entidades contienen hechos que la empresa debe conocer y recordar. Se refieren a conceptos, personas, objetos o cosas importantes para el negocio.
+    </p>
+
+    <div className="bg-emerald-900 bg-opacity-30 border border-emerald-500 rounded-2xl p-5">
+      <h4 className="font-bold text-emerald-200 mb-2">💡 Pregunta útil</h4>
+      <p className="text-slate-300">
+        Si la organización necesita guardar información sobre algo, probablemente ese “algo” puede ser una entidad.
+      </p>
+    </div>
+  </Card>
+
+  <Card className="border-purple-400">
+    <h3 className="text-2xl font-bold text-purple-200 mb-4">🔎 ¿Cómo reconocer una entidad?</h3>
+    <p className="text-slate-300 leading-relaxed mb-5">
+      El PDF indica que, por lo general, las entidades corresponden a los sustantivos más importantes encontrados en la narrativa del negocio.
+    </p>
+
+    <div className="grid md:grid-cols-2 gap-4">
+      <div className="bg-slate-900 rounded-2xl p-5 border border-purple-500">
+        <h4 className="font-bold text-purple-300 mb-3">Ejemplo de narrativa</h4>
+        <p className="text-slate-300 text-sm">
+          “Un profesor debe dictar como mínimo una asignatura en el semestre.”
+        </p>
+      </div>
+
+      <div className="bg-slate-900 rounded-2xl p-5 border border-purple-500">
+        <h4 className="font-bold text-purple-300 mb-3">Sustantivos importantes</h4>
+        <p className="text-slate-300 text-sm">
+          PROFESOR y ASIGNATURA pueden ser entidades, porque son elementos importantes del negocio.
+        </p>
+      </div>
+    </div>
+  </Card>
+
+  <Card className="border-blue-400">
+    <h3 className="text-2xl font-bold text-blue-200 mb-4">📚 Tipos de entidades según ejemplos del PDF</h3>
+    <p className="text-slate-300 leading-relaxed mb-5">
+      El PDF muestra distintas clases de elementos que pueden transformarse en entidades dentro de un modelo.
+    </p>
+
+    <div className="grid md:grid-cols-2 gap-4">
+      <div className="bg-slate-900 rounded-2xl p-5 border border-blue-500">
+        <h4 className="font-bold text-blue-300 mb-2">👤 Persona</h4>
+        <p className="text-slate-300 text-sm mb-2">Sujeto que interviene o efectúa un evento en el negocio.</p>
+        <p className="text-blue-100 text-sm font-bold">Ejemplos: EMPLEADO, PROVEEDOR, CLIENTE, ESTUDIANTE, PROFESOR.</p>
+      </div>
+
+      <div className="bg-slate-900 rounded-2xl p-5 border border-blue-500">
+        <h4 className="font-bold text-blue-300 mb-2">📘 Concepto</h4>
+        <p className="text-slate-300 text-sm mb-2">Término usado para clasificar, calificar o medir otra entidad.</p>
+        <p className="text-blue-100 text-sm font-bold">Ejemplos: TIPO_CLIENTE, TIPO_CUENTA, TRABAJO, COBERTURA.</p>
+      </div>
+
+      <div className="bg-slate-900 rounded-2xl p-5 border border-blue-500">
+        <h4 className="font-bold text-blue-300 mb-2">⚙️ Evento</h4>
+        <p className="text-slate-300 text-sm mb-2">Acciones efectuadas por las personas y que afectan a los objetos.</p>
+        <p className="text-blue-100 text-sm font-bold">Ejemplos: PEDIDO, COMPRA, RECLAMO, SOLICITUD_SERVICIO.</p>
+      </div>
+
+      <div className="bg-slate-900 rounded-2xl p-5 border border-blue-500">
+        <h4 className="font-bold text-blue-300 mb-2">📦 Objeto o cosa</h4>
+        <p className="text-slate-300 text-sm mb-2">Elementos tangibles sobre los que se guarda información.</p>
+        <p className="text-blue-100 text-sm font-bold">Ejemplos: VEHICULO, PRODUCTO, LIBRO, ARTICULO.</p>
+      </div>
+
+      <div className="bg-slate-900 rounded-2xl p-5 border border-blue-500">
+        <h4 className="font-bold text-blue-300 mb-2">📍 Lugar</h4>
+        <p className="text-slate-300 text-sm mb-2">Ubicación de objetos y personas.</p>
+        <p className="text-blue-100 text-sm font-bold">Ejemplos: CIUDAD, PAIS, BODEGA.</p>
+      </div>
+
+      <div className="bg-slate-900 rounded-2xl p-5 border border-blue-500">
+        <h4 className="font-bold text-blue-300 mb-2">🏢 Organización</h4>
+        <p className="text-slate-300 text-sm mb-2">Estructura de una organización.</p>
+        <p className="text-blue-100 text-sm font-bold">Ejemplos: AGENCIA, DEPARTAMENTO, SUCURSAL.</p>
+      </div>
+    </div>
+  </Card>
+
+  <Card className="border-orange-400">
+    <h3 className="text-2xl font-bold text-orange-200 mb-4">🧩 Clasificación del PDF</h3>
+    <p className="text-slate-300 leading-relaxed mb-5">
+      El PDF también clasifica las entidades según su dependencia o relación con otras entidades.
+    </p>
+
+    <div className="grid md:grid-cols-3 gap-4">
+      <div className="bg-slate-900 rounded-2xl p-5 border border-orange-500">
+        <h4 className="font-bold text-orange-300 mb-3">Entidad principal o fuerte</h4>
+        <p className="text-slate-300 text-sm mb-3">
+          Es independiente y no depende de la existencia de otra entidad.
+        </p>
+        <p className="text-orange-100 text-sm font-bold">
+          Ejemplos: Cliente, Profesor, Empleado, Alumno, Departamento, Asignatura.
+        </p>
+      </div>
+
+      <div className="bg-slate-900 rounded-2xl p-5 border border-orange-500">
+        <h4 className="font-bold text-orange-300 mb-3">Entidad característica o débil</h4>
+        <p className="text-slate-300 text-sm mb-3">
+          Depende de la existencia de una entidad fuerte.
+        </p>
+        <p className="text-orange-100 text-sm font-bold">
+          Ejemplos: NOTAS depende de ALUMNO; CARGAS_FAMILIARES depende de EMPLEADO.
+        </p>
+      </div>
+
+      <div className="bg-slate-900 rounded-2xl p-5 border border-orange-500">
+        <h4 className="font-bold text-orange-300 mb-3">Entidad intersección</h4>
+        <p className="text-slate-300 text-sm mb-3">
+          Depende de la existencia de dos o más entidades.
+        </p>
+        <p className="text-orange-100 text-sm font-bold">
+          Ejemplos: ASIGNATURA que une ALUMNO y CURSO; DETALLE_FACTURA que depende de FACTURA y PRODUCTO.
+        </p>
+      </div>
+    </div>
+  </Card>
+
+  <Card className="border-cyan-400">
+    <h3 className="text-2xl font-bold text-cyan-200 mb-4">🛠️ Pasos para identificar entidades desde una narrativa</h3>
+    <p className="text-slate-300 leading-relaxed mb-5">
+      El PDF recomienda los siguientes pasos para identificar y modelar entidades a partir de entrevistas o descripciones del negocio.
+    </p>
+
+    <div className="space-y-3">
+      {[
+        ['1','Examinar los sustantivos presentes en la descripción narrativa de los requerimientos de información.'],
+        ['2','Preguntar si son cosas importantes para considerarlas como entidades.'],
+        ['3','Verificar si hay información de interés que se deba almacenar sobre esa entidad.'],
+        ['4','Confirmar si cada instancia de esa entidad es identificable particularmente.'],
+        ['5','Elaborar una descripción de cada entidad.'],
+        ['6','Dibujar la entidad y colocar sus atributos.']
+      ].map((x,i)=>
+        <div key={i} className="bg-slate-900 rounded-2xl p-4 border border-cyan-500 flex gap-4 items-start">
+          <div className="bg-cyan-600 rounded-full w-9 h-9 flex items-center justify-center font-black shrink-0">{x[0]}</div>
+          <p className="text-slate-300">{x[1]}</p>
+        </div>
+      )}
+    </div>
+  </Card>
+
+  <Card className="border-indigo-400 bg-indigo-900 bg-opacity-20">
+    <h3 className="text-2xl font-bold text-indigo-200 mb-4">📄 Identificación mediante Vistas de Usuario</h3>
+    <p className="text-slate-300 leading-relaxed mb-4">
+      El PDF también explica que las entidades pueden identificarse a través de las vistas de usuario.
+    </p>
+
+    <div className="grid md:grid-cols-2 gap-4">
+      <div className="bg-slate-900 rounded-2xl p-5 border border-indigo-500">
+        <h4 className="font-bold text-indigo-300 mb-3">¿Qué es una Vista de Usuario?</h4>
+        <p className="text-slate-300 text-sm">
+          Es un subconjunto de datos utilizado por un usuario para tomar una decisión o realizar una acción.
+        </p>
+      </div>
+
+      <div className="bg-slate-900 rounded-2xl p-5 border border-indigo-500">
+        <h4 className="font-bold text-indigo-300 mb-3">Ejemplos de vistas</h4>
+        <p className="text-slate-300 text-sm">
+          Documentos, formularios, reportes, carpetas, archivos, pantallas, llamadas telefónicas o contactos personales.
+        </p>
+      </div>
+    </div>
+
+    <div className="bg-indigo-900 bg-opacity-30 border border-indigo-500 rounded-2xl p-5 mt-4">
+      <h4 className="font-bold text-indigo-200 mb-2">💡 Idea clave</h4>
+      <p className="text-slate-300">
+        Las vistas se obtienen revisando las tareas realizadas por los usuarios y los datos requeridos para llevarlas a cabo.
+      </p>
+    </div>
+  </Card>
+
+  <Card className="border-emerald-400">
+    <h3 className="text-2xl font-bold text-emerald-200 mb-4">✏️ Convenciones CASE*METHOD de Oracle</h3>
+    <p className="text-slate-300 leading-relaxed mb-5">
+      El PDF menciona convenciones para representar entidades en el diagrama E/R usando CASE*METHOD de Oracle.
+    </p>
+
+    <div className="grid md:grid-cols-3 gap-4">
+      <div className="bg-slate-900 rounded-2xl p-5 border border-emerald-500">
+        <h4 className="font-bold text-emerald-300 mb-3">Forma</h4>
+        <p className="text-slate-300 text-sm">Se utilizan cajas con bordes redondeados de cualquier tamaño.</p>
+      </div>
+
+      <div className="bg-slate-900 rounded-2xl p-5 border border-emerald-500">
+        <h4 className="font-bold text-emerald-300 mb-3">Nombre único</h4>
+        <p className="text-slate-300 text-sm">Cada entidad debe llevar un nombre único.</p>
+      </div>
+
+      <div className="bg-slate-900 rounded-2xl p-5 border border-emerald-500">
+        <h4 className="font-bold text-emerald-300 mb-3">Mayúscula y singular</h4>
+        <p className="text-slate-300 text-sm">El nombre se escribe en mayúscula y en singular.</p>
+      </div>
+    </div>
+
+    <div data-audio-skip="true" className="svgbox mt-5">
+      <svg viewBox="0 0 820 210" width="100%" height="210" role="img" aria-label="Ejemplo de entidades CASE METHOD">
+        <rect x="70" y="55" width="190" height="90" rx="18" fill="#7dd3fc" stroke="#2563eb" strokeWidth="3"/>
+        <text x="165" y="108" textAnchor="middle" fill="#1e3a8a" fontWeight="900" fontSize="20">ALUMNO</text>
+
+        <rect x="315" y="55" width="190" height="90" rx="18" fill="#7dd3fc" stroke="#2563eb" strokeWidth="3"/>
+        <text x="410" y="108" textAnchor="middle" fill="#1e3a8a" fontWeight="900" fontSize="20">NOTA</text>
+
+        <rect x="560" y="55" width="190" height="90" rx="18" fill="#7dd3fc" stroke="#2563eb" strokeWidth="3"/>
+        <text x="655" y="108" textAnchor="middle" fill="#1e3a8a" fontWeight="900" fontSize="20">PROFESOR</text>
+      </svg>
+    </div>
+  </Card>
+
+  <Card className="border-purple-400">
+    <h3 className="text-2xl font-bold text-purple-200 mb-4">📚 Ejemplo guiado</h3>
+    <p className="text-slate-300 leading-relaxed mb-4">
+      Narrativa: “Cuando se contrata un empleado, se requiere saber su nombre, dirección y teléfono. Además, se le asigna un código que lo identifica.”
+    </p>
+
+    <div className="grid md:grid-cols-2 gap-4">
+      <div className="bg-slate-900 rounded-2xl p-5 border border-purple-500">
+        <h4 className="font-bold text-purple-300 mb-3">Entidad identificada</h4>
+        <div className="bg-purple-900 bg-opacity-30 rounded-xl p-5 border border-purple-500 text-center text-2xl font-black">
+          EMPLEADO
+        </div>
+      </div>
+
+      <div className="bg-slate-900 rounded-2xl p-5 border border-purple-500">
+        <h4 className="font-bold text-purple-300 mb-3">¿Por qué es entidad?</h4>
+        <p className="text-slate-300 text-sm">
+          Porque es importante para el negocio, se necesita guardar información sobre él y cada empleado puede identificarse mediante un código.
+        </p>
+      </div>
+    </div>
+  </Card>
+
+  <Card className="border-yellow-400">
+    <h3 className="text-2xl font-bold text-yellow-200 mb-4">⚠️ Lo que debes recordar para la prueba</h3>
+
+    <div className="grid md:grid-cols-2 gap-4">
+      <div className="bg-slate-900 rounded-2xl p-5 border border-yellow-500">
+        <h4 className="font-bold text-yellow-300 mb-2">Entidad</h4>
+        <p className="text-slate-300 text-sm">Objeto real o abstracto del que se desea guardar información.</p>
+      </div>
+
+      <div className="bg-slate-900 rounded-2xl p-5 border border-yellow-500">
+        <h4 className="font-bold text-yellow-300 mb-2">Cómo detectarla</h4>
+        <p className="text-slate-300 text-sm">Buscar sustantivos importantes en la narrativa del negocio.</p>
+      </div>
+
+      <div className="bg-slate-900 rounded-2xl p-5 border border-yellow-500">
+        <h4 className="font-bold text-yellow-300 mb-2">Cómo nombrarla</h4>
+        <p className="text-slate-300 text-sm">En mayúscula, singular y con nombre único.</p>
+      </div>
+
+      <div className="bg-slate-900 rounded-2xl p-5 border border-yellow-500">
+        <h4 className="font-bold text-yellow-300 mb-2">Pregunta clave</h4>
+        <p className="text-slate-300 text-sm">¿Necesito guardar información sobre esto?</p>
+      </div>
+    </div>
+  </Card>
+
+  <Card className="border-red-400">
+    <h3 className="text-2xl font-bold text-red-200 mb-4">🚨 Pregunta típica de evaluación</h3>
+    <p className="text-slate-300 mb-4">Según las convenciones CASE*METHOD, ¿cómo debe escribirse el nombre de una entidad?</p>
+    <div className="space-y-3">
+      <div className="bg-slate-900 rounded-xl p-4 border border-slate-600">A) En minúscula y plural.</div>
+      <div className="bg-emerald-900 bg-opacity-40 rounded-xl p-4 border border-emerald-500">B) En mayúscula y singular.</div>
+      <div className="bg-slate-900 rounded-xl p-4 border border-slate-600">C) Sin nombre, solo con un símbolo.</div>
+    </div>
+    <p className="text-emerald-200 mt-4 font-bold">✅ Respuesta correcta: B.</p>
+  </Card>
+
+</div>,
+ atributos:<div className="space-y-5"><Card><h2 className="text-3xl font-black mb-3">📝 Atributos</h2><p className="text-slate-300">Un atributo es información que se necesita conocer y mantener de una entidad o relación. Tiene un dominio, es decir, un conjunto de valores posibles.</p></Card><div className="grid md:grid-cols-2 gap-4"><Card><h3 className="font-bold text-indigo-300">Simple</h3><p>Un solo componente. Ejemplo: edad.</p></Card><Card><h3 className="font-bold text-indigo-300">Compuesto</h3><p>Se divide en partes. Ejemplo: dirección: calle, número, comuna.</p></Card><Card><h3 className="font-bold text-indigo-300">Monovalorado</h3><p>Un valor por ocurrencia. Ejemplo: rut.</p></Card><Card><h3 className="font-bold text-indigo-300">Multivalorado</h3><p>Varios valores. Ejemplo: teléfonos de un cliente.</p></Card><Card><h3 className="font-bold text-indigo-300">Derivado</h3><p>Se calcula desde otros datos. Ejemplo: promedio final.</p></Card></div></div>,
+ relaciones:<div className="space-y-5"><Card><h2 className="text-3xl font-black mb-3">🔗 Relaciones y cardinalidad</h2><p className="text-slate-300">Una relación conecta entidades. La cardinalidad indica cuántas ocurrencias pueden participar en esa relación.</p></Card><div className="grid md:grid-cols-3 gap-4"><Card><h3 className="text-xl font-bold text-emerald-300">1:1</h3><p>Una ocurrencia se relaciona con una ocurrencia.</p></Card><Card><h3 className="text-xl font-bold text-blue-300">1:M</h3><p>Una ocurrencia se relaciona con muchas.</p></Card><Card><h3 className="text-xl font-bold text-amber-300">M:M</h3><p>Muchas ocurrencias se relacionan con muchas.</p></Card></div><Card><h3 className="font-bold text-indigo-300 mb-3">Cómo leer</h3><p className="text-slate-300">Siempre lee en ambos sentidos: un cliente puede realizar muchas compras; una compra pertenece a un cliente. Esa lectura ayuda a definir la cardinalidad.</p></Card></div>,
+ summary:<div className="space-y-4">{DATA.summaries.map((s,i)=><Card key={i}><h3 className="text-xl font-bold text-indigo-300 mb-3">{s[0]}</h3><ul className="space-y-2">{s[1].map((p,j)=><li key={j}>✅ {p}</li>)}</ul></Card>)}</div>,
+ flashcards:<Card><h2 className="text-3xl font-black mb-4">🃏 Flashcards</h2><div onClick={()=>setFlashFlip(!flashFlip)} className="cursor-pointer bg-indigo-900 rounded-2xl p-8 min-h-[220px] flex flex-col items-center justify-center text-center border border-indigo-300"><p className="pill mb-4">{DATA.flashcards[flashIdx][0]}</p><h3 className="text-2xl font-black">{flashFlip?DATA.flashcards[flashIdx][2]:DATA.flashcards[flashIdx][1]}</h3><p className="text-indigo-200 mt-4">Haz clic para girar</p></div><div className="flex justify-between mt-4"><Button onClick={()=>{setFlashIdx((flashIdx-1+DATA.flashcards.length)%DATA.flashcards.length);setFlashFlip(false)}}>Anterior</Button><Button onClick={()=>{setFlashIdx((flashIdx+1)%DATA.flashcards.length);setFlashFlip(false)}}>Siguiente</Button></div></Card>,
+ practice:<div className="space-y-4"><Card><h2 className="text-3xl font-black mb-2">📝 Repaso</h2><p className="text-slate-300">Preguntas con respuesta oculta para estudiar escribiendo a mano.</p></Card>{DATA.practice.map((p,i)=><Card key={i}><p className="pill mb-2">{p[0]}</p><h3 className="font-bold text-lg mb-3">{p[1]}</h3><Button onClick={()=>setPracticeOpen({...practiceOpen,[i]:!practiceOpen[i]})}>{practiceOpen[i]?'Ocultar respuesta':'Ver respuesta'}</Button>{practiceOpen[i]&&<p className="mt-3 text-emerald-200 bg-slate-900 rounded-xl p-3">{p[2]}</p>}</Card>)}</div>,
+ reflect:<div className="space-y-4"><Card><h2 className="text-3xl font-black mb-2">🤔 Reflexiona</h2><p className="text-slate-300">Sirve para preparar preguntas de desarrollo.</p></Card>{DATA.reflect.map((p,i)=><Card key={i}><h3 className="font-bold text-lg mb-3">{p[0]}</h3><Button onClick={()=>setReflectOpen({...reflectOpen,[i]:!reflectOpen[i]})}>{reflectOpen[i]?'Ocultar guía':'Ver guía'}</Button>{reflectOpen[i]&&<p className="mt-3 text-indigo-100 bg-slate-900 rounded-xl p-3">{p[1]}</p>}</Card>)}</div>,
+ gloss:<Card><h2 className="text-3xl font-black mb-4">📖 Glosario</h2><div className="grid md:grid-cols-2 gap-3">{DATA.glossary.map((g,i)=><div className="study-note" key={i}><b className="text-indigo-200">{g[0]}</b><p className="text-sm text-slate-300 mt-1">{g[1]}</p></div>)}</div></Card>,
+ quiz:<Card><h2 className="text-3xl font-black mb-4">❓ Quiz</h2>{!finished?<div><p className="mb-3">Pregunta {qIdx+1} de {quiz.length} · Puntaje: {score}</p><h3 className="text-xl font-bold mb-4">{quiz[qIdx].q}</h3><div className="space-y-2">{quiz[qIdx].opts.map((o,i)=><button key={i} onClick={()=>!answered&&setSelected(i)} className={`choice w-full text-left p-4 rounded-xl border transition ${selected===i?'border-indigo-300 bg-indigo-900':'border-slate-600 bg-slate-700'} ${answered&&i===quiz[qIdx].a?'bg-emerald-700 border-emerald-300':''} ${answered&&selected===i&&i!==quiz[qIdx].a?'bg-rose-700 border-rose-300':''}`}>{o}</button>)}</div>{answered&&<p className="mt-4 bg-slate-900 p-3 rounded-xl">{quiz[qIdx].exp}</p>}<div className="mt-4 flex gap-2"><Button disabled={selected===null||answered} onClick={confirm}>Confirmar</Button><Button disabled={!answered} onClick={nextQ}>{qIdx+1<quiz.length?'Siguiente':'Terminar'}</Button></div></div>:<div className="text-center"><p className="text-4xl font-black text-emerald-300 mb-3">{score}/{quiz.length}</p><p className="mb-4">Mejor puntaje guardado: {stats.best}</p><Button onClick={resetQuiz}>Reiniciar quiz</Button>{wrong.length>0&&<div className="text-left mt-5"><h3 className="font-bold text-rose-300 mb-2">Incorrectas</h3>{wrong.map((w,i)=><p key={i} className="bg-slate-900 rounded-xl p-3 mb-2"><b>{w.pregunta}</b><br/>Correcta: {w.correcta}<br/>{w.exp}</p>)}</div>}</div>}</Card>,
+ exam:<Card><h2 className="text-3xl font-black mb-4">📋 Examen</h2>{!examFinished?<div><p className="mb-3">Pregunta {examIdx+1} de {exam.length}</p><h3 className="text-xl font-bold mb-4">{exam[examIdx].q}</h3><div className="space-y-2">{exam[examIdx].opts.map((o,i)=><button key={i} onClick={()=>!examConfirmed&&setExamAnswers(Object.assign([...examAnswers],{[examIdx]:i}))} className={`w-full text-left p-4 rounded-xl border ${examAnswers[examIdx]===i?'border-indigo-300 bg-indigo-900':'border-slate-600 bg-slate-700'} ${examConfirmed&&i===exam[examIdx].a?'bg-emerald-700 border-emerald-300':''}`}>{o}</button>)}</div>{examConfirmed&&<p className="mt-4 bg-slate-900 p-3 rounded-xl">{exam[examIdx].exp}</p>}<div className="mt-4 flex gap-2"><Button disabled={examAnswers[examIdx]===undefined||examConfirmed} onClick={()=>setExamConfirmed(true)}>Confirmar</Button><Button disabled={!examConfirmed} onClick={nextExam}>{examIdx+1<exam.length?'Siguiente':'Finalizar'}</Button></div></div>:<div className="text-center"><p className="text-4xl font-black text-emerald-300 mb-3">{examScore()}/{exam.length}</p><p className="text-2xl mb-4">Nota aprox.: {nota(examScore(),exam.length)}</p><Button onClick={resetExam}>Nuevo examen</Button></div>}</Card>,
+ games:<Card><h2 className="text-3xl font-black mb-4">🎮 Juegos</h2><div className="flex flex-wrap gap-2 mb-4">{Object.entries(DATA.games).map(([k,g])=><Button key={k} onClick={()=>{setActiveGame(k);setGameIdx(0);setGameFeedback(null)}} className={activeGame===k?'bg-emerald-600':''}>{g.title}</Button>)}</div><p className="mb-2">Puntaje: {gameScore}</p><h3 className="text-xl font-bold mb-4">{game.title}</h3><p className="bg-slate-900 rounded-xl p-4 mb-4">{item[0]}</p><div className="grid md:grid-cols-3 gap-2">{game.options.map(o=><button key={o} onClick={()=>answerGame(o)} className="bg-slate-700 hover:bg-indigo-700 rounded-xl p-4 font-bold">{o}</button>)}</div>{gameFeedback&&<div className={`mt-4 rounded-xl p-4 ${gameFeedback.ok?'bg-emerald-800':'bg-rose-800'}`}>{gameFeedback.text}<div className="mt-3"><Button onClick={()=>{setGameFeedback(null);setGameIdx(i=>i+1)}}>Siguiente</Button></div></div>}</Card>,
+ stats:<Card><h2 className="text-3xl font-black mb-4">🏆 Progreso</h2><div className="grid md:grid-cols-3 gap-4"><div className="study-note"><b>Intentos quiz</b><p className="text-3xl font-black">{stats.attempts||0}</p></div><div className="study-note"><b>Mejor quiz</b><p className="text-3xl font-black">{stats.best||0}</p></div><div className="study-note"><b>Exámenes</b><p className="text-3xl font-black">{(stats.examHistory||[]).length}</p></div></div><Button className="mt-4 bg-rose-600" onClick={()=>saveStats({best:0,attempts:0,history:[],wrongAnswers:[],examHistory:[]})}>Borrar progreso</Button></Card>,
+ badges:<Card><h2 className="text-3xl font-black mb-4">🏅 Logros</h2><div className="grid md:grid-cols-2 gap-3">{[{n:'Primer intento',a:(stats.attempts||0)>=1},{n:'Constancia',a:(stats.attempts||0)>=3},{n:'Casi perfecto',a:(stats.best||0)>=10},{n:'Dominio total',a:(stats.best||0)>=12},{n:'Practicante MER',a:true},{n:'Examen realizado',a:(stats.examHistory||[]).length>=1}].map((b,i)=><div key={i} className={`rounded-xl p-4 border ${b.a?'bg-emerald-800 border-emerald-300':'bg-slate-700 border-slate-500 opacity-70'}`}>{b.a?'🏅':'🔒'} <b>{b.n}</b></div>)}</div></Card>
+ };
+ return <div className="min-h-screen p-4 pb-12 font-sans" style={{background:'linear-gradient(135deg,#0f172a 0%,#1e293b 50%,#312e81 100%)',color:'white'}}><div className="max-w-screen-2xl mx-auto main-layout"><main><div className="bg-slate-800 bg-opacity-80 rounded-3xl p-6 mb-6 border border-slate-700 shadow-xl"><h1 className="text-3xl md:text-4xl font-black mb-1">📊 Modelamiento de Bases de Datos</h1><p className="text-indigo-200">Guía interactiva · Unidad I · Semana 1 · Modelo Entidad-Relación</p></div><Menu/><div data-section-active="true">{content[tab]}</div></main><aside className="audio-sidebar"><div className="audio-panel"><div className="flex items-center justify-between mb-2"><b>🎙️ Audio</b><button data-noaudio="true" onClick={()=>setAudioClick(!audioClick)} className={`audio-btn ${audioClick?'audio-toggle-on':'audio-toggle-off'}`}>Audio clic: {audioClick?'ON':'OFF'}</button></div><select value={selectedVoice} onChange={e=>setSelectedVoice(e.target.value)}>{voiceList.length?voiceList.map(v=><option key={v.name} value={v.name}>{v.name}</option>):<option>Voz del navegador</option>}</select><div className="audio-speed"><div className="speed-header"><span>Velocidad</span><span>{audioRate.toFixed(2)}</span></div><input data-noaudio="true" className="speed-range" type="range" min="0.60" max="1.50" step="0.01" value={audioRate} onChange={e=>setAudioRate(Number(e.target.value))}/></div><div className="audio-grid"><button data-noaudio="true" className="audio-btn" onClick={()=>setAudioRate(r=>Math.max(.60,Number((r-.08).toFixed(2))))}>🐢 Más lento</button><button data-noaudio="true" className="audio-btn" onClick={()=>setAudioRate(r=>Math.min(1.50,Number((r+.08).toFixed(2))))}>🐇 Más rápido</button><button data-noaudio="true" className="audio-btn" onClick={leerSeleccion}>🔊 Leer selección</button><button data-noaudio="true" className="audio-btn" onClick={textSection}>📚 Leer sección</button><button data-noaudio="true" className="audio-btn audio-stop" onClick={detener}>⏹️ Detener</button></div></div></aside></div></div>
+}
+ReactDOM.render(<App/>,document.getElementById('root'));
+</script>
+</body>
+</html>
